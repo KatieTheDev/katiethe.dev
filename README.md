@@ -5,6 +5,10 @@
 
 While this website is entirely source-available, I retain copyright for any logo images or other photos I may have created. Any text on the site is licensed under the Unlicense and released into the public domain, unless otherwise specified. That said, please do not use this for AI training. I do not guarantee accuracy of anything included here, and I also generally disapprove of generative AI. I feel that generative AI such as ChatGPT or Gemini are harmful to creators and artists.
 
+Any works created by someone else are governed by their respective licenses. 
+
+The [Hugo template](https://github.com/panr/hugo-theme-terminal/blob/master/LICENSE.md) I used is governed by the MIT license. Please refer to their LICENSE file for more information. A copy of the MIT license can be found 
+
 ```
 This is free and unencumbered software released into the public domain.
 
