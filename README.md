@@ -43,7 +43,11 @@ Ubuntu:
 sudo apt install hugo
 ```
 
-Clone the repository, then:  
+Clone the repository, then run:  
+```
+git submodule init
+git submodule update
+```
 Run `hugo` in the main directory.
 
 All files will be output to /public.
