@@ -1,9 +1,10 @@
 baseurl = "/"
 languageCode = "en-us"
+copyright = 'KatieTheDev'
 # Add it only if you keep the theme in the `themes` directory.
 # Remove it if you use the theme as a remote Hugo Module.
 # theme = "terminal"
-paginate = 5
+pagination.pagerSize = 5
 
 [params]
   # dir name of your main content (default is `content/posts`).
@@ -20,7 +21,7 @@ paginate = 5
   fullWidthTheme = false
 
   # center theme with default width
-  centerTheme = false
+  centerTheme = true
 
   # if your resource directory contains an image called `cover.(jpg|png|webp)`,
   # then the file will be used as a cover automatically.
@@ -56,7 +57,7 @@ paginate = 5
 [languages]
   [languages.en]
     languageName = "English"
-    title = "Terminal"
+    title = "KatieThe.Dev"
 
     [languages.en.params]
       subtitle = "A simple, retro theme for Hugo"
@@ -74,7 +75,7 @@ paginate = 5
       words = "words"
 
       [languages.en.params.logo]
-        logoText = "Terminal"
+        logoText = "KatieThe.Dev"
         logoHomeLink = "/"
 
       [languages.en.menu]
