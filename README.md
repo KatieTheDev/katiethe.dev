@@ -7,7 +7,7 @@ While this website is entirely source-available, I retain copyright for any logo
 
 Any works created by someone else are governed by their respective licenses. 
 
-The [Hugo template](https://github.com/panr/hugo-theme-terminal/) I used is governed by the MIT license. Please refer to their LICENSE file for more information. A copy of the MIT license can be found in my LICENSE file or in [their GitHub repository](https://github.com/panr/hugo-theme-terminal/blob/master/LICENSE.md)
+The [Hugo template ("Terminal")](https://github.com/panr/hugo-theme-terminal/) I used is governed by the MIT license. Please refer to their LICENSE file for more information. A copy of the MIT license can be found in my LICENSE file or in [their GitHub repository](https://github.com/panr/hugo-theme-terminal/blob/master/LICENSE.md)
 
 ```
 This is free and unencumbered software released into the public domain.
