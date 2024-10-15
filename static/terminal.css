@@ -13,6 +13,7 @@ Please see LICENSE in the project root for more information.
   --background: #25062a;
   --foreground: #eceae5;
   --accent: #d160e1;
+  --post-tags: #8c8c8c;
   --font-size: 1rem;
   --line-height: 1.54rem;
   --radius: 0pxpx;
@@ -383,11 +384,4 @@ hr {
   border: none;
   background: var(--accent);
   height: 2px;
-}
-
-#sitelogo {
-  border: 0px;
-  padding: 0px;
-  margin: 0px;
-  display: block;
 }
