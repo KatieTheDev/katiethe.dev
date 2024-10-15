@@ -9,6 +9,7 @@
 #Please see LICENSE in the project root for more information.
 title = "{{ replace .TranslationBaseName "-" " " | title }}"
 date = "{{ .Date }}"
+lastmod = "{{ .Date }}"
 author = ""
 #cover = ""
 #tags = ["", ""]
