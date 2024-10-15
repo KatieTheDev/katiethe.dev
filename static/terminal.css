@@ -373,3 +373,10 @@ hr {
   background: var(--accent);
   height: 2px;
 }
+
+#sitelogo {
+  border: 0px;
+  padding: 0px;
+  margin: 0px;
+  display: block;
+}

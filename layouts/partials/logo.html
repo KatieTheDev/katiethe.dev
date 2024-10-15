@@ -1,0 +1,10 @@
+<a href="{{ if $.Site.Params.Logo.LogoHomeLink }}{{ $.Site.Params.Logo.LogoHomeLink }}{{else}}{{ $.Site.BaseURL }}{{ end }}">
+  <div class="logo">
+    {{ $logo := resources.Get "images/logo.png" }}
+    {{ $logo := $logo.Fit "30x30" }}
+    {{ with $logo }}
+      <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="" id="sitelogo">
+    {{ end }}
+    {{ with $.Site.Params.Logo.logoText }}{{ . }}{{ else }}Terminal{{ end }}
+  </div>
+</a>
