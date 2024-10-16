@@ -1,8 +1,8 @@
 +++
 title = "Automating Hugo deployments with GitHub and Webhooks on Ubuntu 24.04 LTS"
-date = "{{ .Date }}"
-lastmod = "{{ .Date }}"
-author = ""
+date = "2024-10-16T15:57:00-6:00"
+lastmod = "2024-10-16T15:57:00-6:00"
+author = "KatieTheDev"
 #cover = ""
 #tags = ["", ""]
 #keywords = ["", ""]
@@ -10,7 +10,7 @@ description = ""
 showFullContent = false
 readingTime = true
 hideComments = false
-draft = true
+draft = false
 +++
 # Overview
 In this blog post, I will walk you through the process of automating Hugo deployments using a bash script and setting up a webhook to streamline updates from GitHub. The guide is designed for users on Ubuntu Server 24.04 LTS and covers three main components:
