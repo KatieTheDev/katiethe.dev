@@ -1,5 +1,6 @@
 +++
 title = "{{ replace .TranslationBaseName "-" " " | title }}"
+slug = ""
 date = "{{ .Date }}"
 lastmod = "{{ .Date }}"
 author = ""
