@@ -53,7 +53,12 @@ pagination.pagerSize = 5
   # do not include @
   # creator = ""
   # site = ""
-
+[permalinks]
+  [permalinks.page]
+    posts = '/posts/:year/:month/:slug/'
+  [permalinks.section]
+    posts = '/posts/'
+    
 [languages]
   [languages.en]
     languageName = "English"
