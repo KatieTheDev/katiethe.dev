@@ -1,5 +1,6 @@
 +++
 title = "Robots.txt"
+slug="robots-txt"
 date = "2024-10-16T12:40:57-06:00"
 lastmod = "2024-10-16T12:40:57-06:00"
 author = "KatieTheDev"
