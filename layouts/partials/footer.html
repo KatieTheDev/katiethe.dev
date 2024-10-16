@@ -32,7 +32,3 @@ Please see LICENSE in the project root for more information.
 
 <!-- Extended footer section-->
 {{ partial "extended_footer.html" . }}
-
-{{ if (findRE "<pre" .Content 1) }}
-    <script src="{{< ref "/js/copy-code-button.js" >}}>"</script>
-{{ end }}
