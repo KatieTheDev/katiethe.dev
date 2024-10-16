@@ -1,7 +1,7 @@
 +++
 title = "Automating Hugo deployments with GitHub and Webhooks on Ubuntu 24.04 LTS"
-date = "2024-10-16T15:57:00-6:00"
-lastmod = "2024-10-16T15:57:00-6:00"
+date = "2024-10-16T15:50:57-06:00"
+lastmod = "2024-10-16T15:50:57-06:00"
 author = "KatieTheDev"
 #cover = ""
 #tags = ["", ""]
