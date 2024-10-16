@@ -55,7 +55,7 @@ pagination.pagerSize = 5
   # site = ""
 [permalinks]
   [permalinks.page]
-    posts = '/posts/:year/:month/:slug/'
+    posts = '/posts/:year/:month/:day/:slug/'
   [permalinks.section]
     posts = '/posts/'
     
