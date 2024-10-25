@@ -1,6 +1,6 @@
 # Copyright Notice
 
-All files within this directory are copyrighted by the owner and are not covered under the main repository license.
+All files within this directory are copyrighted by the owner and are not covered under the main repository license. These files are subject to the terms of this notice.
 
 ## Restrictions
 
