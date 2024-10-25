@@ -14,6 +14,10 @@ No permissions are granted for:
 
 These files in this directory are exempt from the licensing terms applied to other parts of the repository. Any use of `favicon.png` and `og-image.png` without prior written consent from the copyright holder is strictly prohibited.
 
+## Liability
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 ## Licensing Inquiries
 
 For licensing inquiries, please contact the repository owner directly.
