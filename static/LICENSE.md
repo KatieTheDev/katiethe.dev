@@ -1,6 +1,6 @@
 # Copyright Notice
 
-The files `favicon.png` and `og-image.png` in this directory are copyrighted by the owner and are not covered under the main repository license. These files are subject to the terms of this notice.
+The files `favicon.png` and `og-image.png` ("EXEMPT FILES") in this directory are copyrighted by the owner and are not covered under the main repository license. These files are subject to the terms of this notice.
 
 ## Restrictions
 
@@ -12,7 +12,7 @@ No permissions are granted for:
 
 ## License Exemption
 
-These files in this directory are exempt from the licensing terms applied to other parts of the repository. Any use of `favicon.png` and `og-image.png` without prior written consent from the copyright holder is strictly prohibited.
+These EXEMPT FILES in this directory are exempt from the licensing terms applied to other parts of the repository. Any use of EXEMPT FILES without prior written consent from the copyright holder is strictly prohibited.
 
 ## Liability
 
