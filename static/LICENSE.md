@@ -1,6 +1,6 @@
 # Copyright Notice
 
-The files `favicon.png` and `og-image.png` in this directory are copyrighted by the owner and are not covered under the main repository license.
+The files `favicon.png` and `og-image.png` in this directory are copyrighted by the owner and are not covered under the main repository license. These files are subject to the terms of this notice.
 
 ## Restrictions
 
