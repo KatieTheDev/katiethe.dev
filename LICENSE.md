@@ -4,6 +4,8 @@ Logos, images, and other visual creative works are not released into the public 
 
 The [Hugo template ("Terminal")](https://github.com/panr/hugo-theme-terminal/) I used is governed by the MIT license. Please refer to their LICENSE file for more information. A copy of the MIT license can be found in my LICENSE file or in [their GitHub repository](https://github.com/panr/hugo-theme-terminal/blob/master/LICENSE.md).
 
+Anything not otherwise exempted is subject to the following license:
+
 ## Unlicense License
 This is free and unencumbered software released into the public domain.
 
