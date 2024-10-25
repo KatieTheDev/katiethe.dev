@@ -1,7 +1,19 @@
 # LICENSE
 ## Exemptions
+### General Exemptions
 Logos, images, and other visual creative works are not released into the public domain and I retain all copyright to such works. Any directories containing exempted contents will have a specific LICENSE file. 
 
+### Specific Exemptions
+The following files and directories are excluded from the Unlicense applied to this repository:
+
+- `favicon.png` and `og-image.png` (located in /static)
+- All files in the `/assets/images` directory
+
+More information regarding these exemptions can be found in the respective directories.
+
+These files are fully copyrighted and may not be copied, modified, or distributed without explicit permission from the repository owner.
+
+### Hugo Template 
 The [Hugo template ("Terminal")](https://github.com/panr/hugo-theme-terminal/) I used is governed by the MIT license. Please refer to their LICENSE file for more information. A copy of the MIT license can be found in my LICENSE file or in [their GitHub repository](https://github.com/panr/hugo-theme-terminal/blob/master/LICENSE.md).
 
 Anything not otherwise exempted is subject to the following license:
