@@ -7,6 +7,8 @@ copyright = 'KatieTheDev'
 pagination.pagerSize = 5
 
 [params]
+  # Don't build any LICENSE file
+  ignoreFiles = ["^LICENSE(\\.md)?$"]
   # dir name of your main content (default is `content/posts`).
   # the list of set content will show up on your index page (baseurl).
   contentTypeName = "posts"
