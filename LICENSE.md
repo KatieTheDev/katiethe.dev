@@ -14,7 +14,7 @@ More information regarding these exemptions can be found in the respective direc
 These files are fully copyrighted and may not be copied, modified, or distributed without explicit permission from the repository owner.
 
 ### Hugo Template 
-The Hugo template ("Terminal") I used is governed by the MIT license. Please refer to their LICENSE file for more information. A copy of the MIT license can be found in my LICENSE file or in [their GitHub repository](https://github.com/panr/hugo-theme-terminal/blob/master/LICENSE.md).
+The Hugo template ("Terminal") I used is governed by the MIT license. Please refer to their LICENSE file for more information. A copy of the MIT license can be found in [their GitHub repository](https://github.com/panr/hugo-theme-terminal/blob/master/LICENSE.md).
 
 Anything not otherwise exempted is subject to the following license:
 
