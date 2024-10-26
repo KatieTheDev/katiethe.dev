@@ -113,3 +113,6 @@ pagination.pagerSize = 5
     endLevel = 3
     ordered = false
     startLevel = 1
+
+[frontmatter]
+  lastmod = [':git', ":fileModTime", 'lastmod', 'modified', 'date', 'pubdate']
