@@ -2,7 +2,7 @@
 title = "Automating Hugo deployments with GitHub and Webhooks on Ubuntu 24.04 LTS"
 slug = "hugo-automated-deployments-webhooks-ubuntu-24.04"
 date = "2024-10-16T15:50:57-06:00"
-#lastmod = "2024-10-25T18:20:00-06:00"
+lastmod = "2024-10-25T20:16:00-06:00"
 author = "KatieTheDev"
 #cover = ""
 tags = ["hugo", "web development", "guides"]
@@ -48,7 +48,8 @@ service nginx status
 ```
 This script was created on Ubuntu Server 24.04 LTS.
 
-# Create webhook.conf
+# Create a webhook
+## Create webhook.conf
 With that script created (I named it `hugo-deploy.sh`) and placed into a directory of your choice, we can now create a webhook. GitHub will call this webhook every time code is pushed to GitHub. This will automatically deploy the website.
 
 I placed the following into `/etc/webhook.conf`:
