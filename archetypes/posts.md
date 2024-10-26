@@ -1,8 +1,8 @@
 +++
 title = "{{ replace .TranslationBaseName "-" " " | title }}"
-slug = ""
+#slug = "" # Set manually if title is not usable as slug
 date = "{{ .Date }}"
-author = ""
+author = "" # Set author name here!
 #cover = ""
 #tags = ["", ""]
 #keywords = ["", ""]
