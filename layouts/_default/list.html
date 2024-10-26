@@ -1,3 +1,16 @@
+{{/*
+  COPYRIGHT NOTICE:
+  Portions of this file created by panr
+  and are licensed under the MIT License
+  please see the respective source for more information:
+  https://github.com/panr/hugo-theme-terminal/ 
+  
+  Anything created by me is released into the public domain.
+  Please see LICENSE in the project root for more information.
+  
+  Commit 531e261 is original code, any modifications past that are my own works.
+*/}}
+
 {{ define "main" }}
   {{ with .Content }}
     <div class="index-content">
@@ -13,7 +26,7 @@
         <div class="post-meta">
           {{- if .Date -}}
             <time class="post-date">
-              {{- .Date.Format "2006-01-02" -}}
+              {{- .Date.Format "2006-01-02" -}}&nbsp;<span class="post-time">{{- .Date | time.Format ":time_long" -}}</span>
             </time>
           {{- end -}}
           {{- with .Params.Author -}}
