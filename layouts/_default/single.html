@@ -18,7 +18,7 @@ Please see LICENSE in the project root for more information.
       <time class="post-date">
         {{- .Date.Format "2006-01-02" -}}
         {{- if $.Site.Params.showLastUpdated -}}
-          [{{- or $.Site.Params.updatedDatePrefix "Updated" -}} :: {{- .Lastmod | time.Format ":date_medium" }}]
+          [{{- or $.Site.Params.updatedDatePrefix "Updated" -}} :: {{- .Lastmod | time.Format ":date_medium" -}}]
         {{- end -}}
       </time>
     {{- end -}}
