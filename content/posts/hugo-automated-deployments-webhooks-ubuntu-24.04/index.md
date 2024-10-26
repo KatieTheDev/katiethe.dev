@@ -2,7 +2,7 @@
 title = "Automating Hugo deployments with GitHub and Webhooks on Ubuntu 24.04 LTS"
 slug = "hugo-automated-deployments-webhooks-ubuntu-24.04"
 date = "2024-10-16T15:50:57-06:00"
-lastmod = "2024-10-16T15:50:57-06:00"
+lastmod = "2024-10-25T18:20:00-06:00"
 author = "KatieTheDev"
 #cover = ""
 tags = ["hugo", "web development", "guides"]
