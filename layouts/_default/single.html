@@ -7,6 +7,8 @@ https://github.com/panr/hugo-theme-terminal/
 
 Anything created by me is released into the public domain.
 Please see LICENSE in the project root for more information.
+
+Commit fa331af is original code, any modifications past that are my own works.
 -->
 {{ define "main" }}
 <article class="post">
@@ -16,9 +18,9 @@ Please see LICENSE in the project root for more information.
   <div class="post-meta">
     {{- if .Date -}}
       <time class="post-date">
-        {{- .Date.Format "2006-01-02" -}}
+        {{- .Date.Format "2006-01-02" -}}&nbsp;{{- .Date | time.Format ":time_long" -}}
         {{- if $.Site.Params.showLastUpdated -}}
-          [{{- or $.Site.Params.updatedDatePrefix "Updated" -}} :: {{- .Lastmod.Format "2006-01-02" -}}]
+          [{{- or $.Site.Params.updatedDatePrefix "Updated" -}} :: {{- .Lastmod.Format "2006-01-02" -}}&nbsp;{{- .Lastmod | time.Format ":time_long" -}}]
         {{- end -}}
       </time>
     {{- end -}}
@@ -65,3 +67,4 @@ Please see LICENSE in the project root for more information.
   {{ end }}
 </article>
 {{ end }}
+
