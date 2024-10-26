@@ -33,7 +33,7 @@
   .post-meta {
     font-size: 1rem;
     margin-bottom: 10px;
-    color: color-mix(in srgb, var(--foreground) 50%, transparent);
+    color: color-mix(in srgb, var(--foreground) 65%, transparent);
   }
   
   .post-meta > *:not(:first-child)::before {
