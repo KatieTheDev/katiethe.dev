@@ -68,7 +68,7 @@ pagination.pagerSize = 5
     title = "KatieThe.Dev"
 
     [languages.en.params]
-      subtitle = "A simple, retro theme for Hugo"
+      subtitle = ""
       owner = ""
       keywords = ""
       copyright = ""
