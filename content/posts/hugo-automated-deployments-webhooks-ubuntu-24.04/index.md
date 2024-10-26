@@ -77,7 +77,7 @@ I placed the following into `/etc/webhook.conf`:
 ```
 If you placed your script into a file other than your home directory, the specific locations may differ.
 
-# Add systemd service
+## Add systemd service
 Lastly, I created a systemd service called `webhook` located at `/usr/lib/systemd/system/webhook.service`:
 ```
 [Unit]
