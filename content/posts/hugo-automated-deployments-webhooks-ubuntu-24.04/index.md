@@ -2,7 +2,7 @@
 title = "Automating Hugo deployments with GitHub and Webhooks on Ubuntu 24.04 LTS"
 slug = "hugo-automated-deployments-webhooks-ubuntu-24.04"
 date = "2024-10-16T15:50:57-06:00"
-lastmod = "2024-10-25T18:20:00-06:00"
+#lastmod = "2024-10-25T18:20:00-06:00"
 author = "KatieTheDev"
 #cover = ""
 tags = ["hugo", "web development", "guides"]
@@ -99,3 +99,9 @@ sudo systemctl enable webhook
 sudo systemctl start webhook
 ```
 You can now test your webhook with either curl or by adding it in GitHub. If you set a secret, make sure to add that to GitHub as well.
+
+## View Webhook Logs
+Webhooks can be viewed by running the following:
+```bash
+journalctl -u webhook.service
+```
