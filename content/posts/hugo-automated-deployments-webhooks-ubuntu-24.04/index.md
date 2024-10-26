@@ -13,7 +13,7 @@ readingTime = true
 hideComments = false
 draft = false
 +++
-## Overview
+# Overview
 In this blog post, I will walk you through the process of automating Hugo deployments using a bash script and setting up a webhook to streamline updates from GitHub. The guide is designed for users on Ubuntu Server 24.04 LTS and covers three main components:
 
 1.	Creating a Deployment Script: We will create a shell script that handles the tasks of pulling the latest code, building the Hugo site, and deploying it to the web directory. This script will ensure that your site is always up to date with the latest changes.
@@ -22,7 +22,7 @@ In this blog post, I will walk you through the process of automating Hugo deploy
 4.	Enable the webhook
 
 By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.
-## Create Hugo deploy script
+# Create Hugo deploy script
 I use the following script to automate Hugo deployments. 
 ```bash
 #!/bin/bash
@@ -48,7 +48,7 @@ service nginx status
 ```
 This script was created on Ubuntu Server 24.04 LTS.
 
-## Create webhook.conf
+# Create webhook.conf
 With that script created (I named it `hugo-deploy.sh`) and placed into a directory of your choice, we can now create a webhook. GitHub will call this webhook every time code is pushed to GitHub. This will automatically deploy the website.
 
 I placed the following into `/etc/webhook.conf`:
@@ -76,7 +76,7 @@ I placed the following into `/etc/webhook.conf`:
 ```
 If you placed your script into a file other than your home directory, the specific locations may differ.
 
-## Add systemd service
+# Add systemd service
 Lastly, I created a systemd service called `webhook` located at `/usr/lib/systemd/system/webhook.service`:
 ```
 [Unit]
