@@ -16,9 +16,9 @@
   border: 0px;
 }
 
-.post-date {
+/*.post-date {
   float: left;
-}
+}*/
 /*Code copy button CSS*/
 /*From https://www.dannyguo.com/blog/how-to-add-copy-to-clipboard-buttons-to-code-blocks-in-hugo/ */
 .copy-code-button {
