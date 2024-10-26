@@ -69,9 +69,9 @@ pagination.pagerSize = 5
 
     [languages.en.params]
       subtitle = ""
-      owner = ""
+      owner = "KatieTheDev"
       keywords = ""
-      copyright = ""
+      copyright = "KatieTheDev"
       menuMore = "Show more"
       readMore = "Read more"
       readOtherPosts = "Read other posts"
