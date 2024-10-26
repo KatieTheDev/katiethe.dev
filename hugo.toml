@@ -109,3 +109,7 @@ pagination.pagerSize = 5
     [markup.goldmark.parser]
       [markup.goldmark.parser.attribute]
         block = true
+  [markup.tableOfContents]
+    endLevel = 3
+    ordered = false
+    startLevel = 1
