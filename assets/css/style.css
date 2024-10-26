@@ -8,8 +8,12 @@
 .text-accent-color {
   color: var(--accent);
 }
+
 .post-time {
   text-transform: uppercase;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
 }
 /*Code copy button CSS*/
 /*From https://www.dannyguo.com/blog/how-to-add-copy-to-clipboard-buttons-to-code-blocks-in-hugo/ */
