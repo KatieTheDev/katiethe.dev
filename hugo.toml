@@ -94,10 +94,6 @@ pagination.pagerSize = 5
           identifier="posts"
           name="Posts"
           url="/posts"
-        [[languages.en.menu.main]]
-          identifier = "showcase"
-          name = "Showcase"
-          url = "/showcase"
 
 [module]
   # In case you would like to make changes to the theme and keep it locally in you repository,
