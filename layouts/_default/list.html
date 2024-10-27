@@ -28,9 +28,9 @@
             <time class="post-date">
               {{- if or (.Params.showPostTime) (.Site.Params.showPostTime) -}}
                 {{- if or (.Params.postTimeSeconds) (.Site.Params.postTimeSeconds) -}}
-                  {{- .Date.Format "2006-01-02" -}}&nbsp;<span class="post-time">{{- .Date | time.Format ":time_long" -}}</span>
+                  {{- .Date.Format "2006-01-02 3:04:05 PM MST" -}}
                 {{- else -}}
-                  {{- .Date.Format "2006-01-02" -}}&nbsp;<span class="post-time">{{- .Date | time.Format "3:04 PM MST" -}}</span>
+                  {{- .Date.Format "2006-01-02 3:04 PM MST" -}}
                 {{- end -}}
               {{- else -}}
                 {{- .Date.Format "2006-01-02" -}}
