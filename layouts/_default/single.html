@@ -19,25 +19,27 @@ Commit fa331af is original code, any modifications past that are my own works.
   <div class="post-meta">
     {{- if .Date -}}
       <time class="post-date">
-        {{- if or (.Params.showPostTime) (.Site.Params.showPostTime) -}}
-          {{- if or (.Params.postTimeSeconds) (.Site.Params.postTimeSeconds) -}}
-            {{- .Date.Format "2006-01-02 3:04:05 PM MST" -}}
-          {{- else -}}
-            {{- .Date.Format "2006-01-02 3:04 PM MST" -}}
-          {{- end -}}
+        {{- $date := .Date | time -}}
+        {{- with .Params.dateFormat -}}
+          {{- $date.Format . -}}
         {{- else -}}
-          {{- .Date.Format "2006-01-02" -}}
+          {{- with .Site.Params.dateFormat -}}
+            {{- $date.Format . -}}
+          {{- else -}}
+            {{- $date.Format "2006-01-02" -}}
+          {{- end -}}
         {{- end -}}
         {{- if $.Site.Params.showLastUpdated -}}
-          &nbsp;[{{- or $.Site.Params.updatedDatePrefix "Updated" -}}{{ if or (.Params.showPostTime) (.Site.Params.showPostTime) }}
-          {{- if or (.Params.postTimeSeconds) (.Site.Params.postTimeSeconds) -}}
-            &nbsp;{{- .Lastmod.Format "2006-01-02 3:04:05 PM MST" -}}
+          {{- $lastmod := .Lastmod | time -}}
+          {{- with .Params.dateFormat -}}
+            &nbsp;[{{- $lastmod.Format . -}}]
           {{- else -}}
-            &nbsp;{{- .Lastmod.Format "2006-01-02 3:04 PM MST" -}}
+            {{- with .Site.Params.dateFormat -}}
+              &nbsp;[{{- $lastmod.Format . -}}]
+            {{- else -}}
+              &nbsp;[{{- $lastmod.Format "2006-01-02" -}}]
+            {{- end -}}
           {{- end -}}
-        {{- else -}}
-          {{- .Date.Format "2006-01-02" -}}
-        {{- end -}}]
         {{- end -}}
       </time>
     {{- end -}}
