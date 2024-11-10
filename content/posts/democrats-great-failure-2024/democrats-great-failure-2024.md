@@ -1,7 +1,7 @@
 +++
 title = "The Democrats' Great Failure of 2024" 
 slug = "democrats-great-failure-2024" # Set manually if title is not usable as slug
-date = "2024-11-10T16:53:00-0600"
+#date = "2024-11-10T16:53:00-0600"
 #dateFormat = "2006-01-02 3:04:06 PM MST"
 author = "KatieTheDev" # Set author name here!
 tags = ["politics", "election 2024"]
