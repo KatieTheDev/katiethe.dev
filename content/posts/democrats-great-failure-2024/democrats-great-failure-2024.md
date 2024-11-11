@@ -24,7 +24,7 @@ While the election isn't 100% done being counted as of yet, current AP numbers a
 ## The rise of the grifters
 Since 2020, and alongside COVID, we saw the rise of popularity of far-right grifters online. This includes classics such as Ben Shapiro and Charlie Kirk, as well as newer faces such as Andrew Tate. With the rise of these fascist grifters, Gen Z boys and men have increasingly become further right. I believe this is much of the cause for the landslide Trump win. 
 
-In [a study](https://www.statista.com/statistics/1417619/gb-men-opinion-andrew-tate-by-age/) British men were asked their opinion of Andrew Tate. The group with the most favorable view of him was 18-29 year olds. An [article by The Guardian](https://www.theguardian.com/news/2024/jan/06/im-andrew-tates-audience-and-i-know-why-he-appeals-to-young-men) also supports my view that young men find grifters such as Tate to be appealing. 
+In [a study](https://www.statista.com/statistics/1417619/gb-men-opinion-andrew-tate-by-age/), British men were asked their opinion of Andrew Tate. The group with the most favorable view of him was 18-29 year olds. An [article by The Guardian](https://www.theguardian.com/news/2024/jan/06/im-andrew-tates-audience-and-i-know-why-he-appeals-to-young-men) also supports my view that young men find grifters such as Tate to be appealing. 
 
 In short, Democrats failed to reach out to these young men. This increased voter turnout for Trump this year, contributing to his landslide victory. 
 ## Voters simply didn't know 
