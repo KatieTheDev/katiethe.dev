@@ -36,7 +36,7 @@
         <div class="post-meta">
           {{- if .Date -}}
             <time class="post-date">
-              {{- $date := .Date | time -}}
+              {{- $date := .Date -}}
               {{- with .Params.dateFormat -}}
                 {{- $date | time.Format . -}}
               {{- else -}}

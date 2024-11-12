@@ -19,7 +19,7 @@ Commit fa331af is original code, any modifications past that are my own works.
   <div class="post-meta">
     {{- if .Date -}}
       <time class="post-date">
-        {{- $date := .Date | time -}}
+        {{- $date := .Date -}}
         {{- with .Params.dateFormat -}}
           {{- $date | time.Format . -}}
         {{- else -}}
@@ -30,7 +30,7 @@ Commit fa331af is original code, any modifications past that are my own works.
           {{- end -}}
         {{- end -}}
         {{- if $.Site.Params.showLastUpdated -}}
-          {{- $lastmod := .Lastmod | time -}}
+          {{- $lastmod := .Lastmod -}}
           {{- with .Params.dateFormat -}}
             &nbsp;[{{- $lastmod | time.Format . -}}]
           {{- else -}}
