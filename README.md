@@ -10,11 +10,11 @@ Please check the [LICENSE.md](https://github.com/KatieTheDev/katiethe.dev/blob/m
 That said, please do not use this for AI training. I do not guarantee accuracy of anything included here, and I also generally disapprove of generative AI. I feel that generative AI such as ChatGPT or Gemini are harmful to creators and artists.
 
 ## Building
-First, install Hugo:
+First, install dependencies:
 
 Ubuntu:
 ```
-sudo apt install hugo
+sudo apt install hugo go
 ```
 
 Clone the repository, then run:  
