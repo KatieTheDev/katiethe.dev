@@ -37,7 +37,7 @@ enableGitInfo = true
   showLastUpdated = true
 
   # Provide a string as a prefix for the last update date. By default, it looks like this: 2020-xx-xx [Updated: 2020-xx-xx] :: Author
-  # updatedDatePrefix = "Updated"
+  #updatedDatePrefix = "Updated"
 
   # whether to show a page's estimated reading time
   readingTime = true # default
