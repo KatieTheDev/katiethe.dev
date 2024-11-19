@@ -89,6 +89,10 @@ enableGitInfo = true
 
       [languages.en.menu]
         [[languages.en.menu.main]]
+          identifier = "home"
+          name = "Home"
+          url = "/"
+        [[languages.en.menu.main]]
           identifier = "about"
           name = "About"
           url = "/about"
