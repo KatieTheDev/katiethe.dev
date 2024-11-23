@@ -1,143 +1,184 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Web Development on KatieThe.Dev</title><link>/tags/web-development/</link><description>Recent content in Web Development on KatieThe.Dev</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>KatieTheDev</copyright><lastBuildDate>Wed, 16 Oct 2024 15:50:57 -0600</lastBuildDate><atom:link href="/tags/web-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Automating Hugo deployments with GitHub and Webhooks on Ubuntu 24.04 LTS</title><link>/posts/2024/10/16/hugo-automated-deployments-webhooks-ubuntu-24.04/</link><pubDate>Wed, 16 Oct 2024 15:50:57 -0600</pubDate><guid>/posts/2024/10/16/hugo-automated-deployments-webhooks-ubuntu-24.04/</guid><description>&lt;h1 id="overview">Overview&lt;/h1>
-&lt;p>In this blog post, I will walk you through the process of automating Hugo deployments using a bash script and setting up a webhook to streamline updates from GitHub. The guide is designed for users on Ubuntu Server 24.04 LTS and covers three main components:&lt;/p>
-&lt;ol>
-&lt;li>Creating a Deployment Script: We will create a shell script that handles the tasks of pulling the latest code, building the Hugo site, and deploying it to the web directory. This script will ensure that your site is always up to date with the latest changes.&lt;/li>
-&lt;li>Configuring a Webhook: Once the deployment script is in place, we’ll set up a webhook configuration that allows GitHub to automatically trigger the deployment process every time you push code to your repository. This automation saves time and reduces the potential for manual errors.&lt;/li>
-&lt;li>Setting Up a Systemd Service: Finally, we’ll create a systemd service to manage the webhook, ensuring that it runs reliably and automatically on server startup. This includes configuring the service for SSL if needed.&lt;/li>
-&lt;li>Enable the webhook&lt;/li>
-&lt;/ol>
-&lt;p>By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p></description><content>&lt;h1 id="overview">Overview&lt;/h1>
-&lt;p>In this blog post, I will walk you through the process of automating Hugo deployments using a bash script and setting up a webhook to streamline updates from GitHub. The guide is designed for users on Ubuntu Server 24.04 LTS and covers three main components:&lt;/p>
-&lt;ol>
-&lt;li>Creating a Deployment Script: We will create a shell script that handles the tasks of pulling the latest code, building the Hugo site, and deploying it to the web directory. This script will ensure that your site is always up to date with the latest changes.&lt;/li>
-&lt;li>Configuring a Webhook: Once the deployment script is in place, we’ll set up a webhook configuration that allows GitHub to automatically trigger the deployment process every time you push code to your repository. This automation saves time and reduces the potential for manual errors.&lt;/li>
-&lt;li>Setting Up a Systemd Service: Finally, we’ll create a systemd service to manage the webhook, ensuring that it runs reliably and automatically on server startup. This includes configuring the service for SSL if needed.&lt;/li>
-&lt;li>Enable the webhook&lt;/li>
-&lt;/ol>
-&lt;p>By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p>
-&lt;h1 id="create-hugo-deploy-script">Create Hugo deploy script&lt;/h1>
-&lt;p>I use the following script to automate Hugo deployments.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#75715e"># Change directory into build directory&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd /home/katiethedev/build/katiethe.dev
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Remove existing files in build directory&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm -rf public
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm -rf resources
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Run git pull as username &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo -u username git pull
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Run Hugo with minify option to build a minified site, to save on bandwidth and storage. For development purposes you can remove --minify.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo -u username hugo --minify
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Change directories into web directory and then remove all present files&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd /var/www/katiethe.dev
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm -rf *
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Copy all Hugo output files into web directory (switch username for your username)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cp -r /home/username/build/katiethe.dev/public/* /var/www/katiethe.dev
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Change ownership of all files in web directory to my user (change username to your username, change usergroup to your usergroup [usually the same as username])&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chown username:usergroup * -R
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Reload nginx, log nginx status to webhook log, or show if ran manually&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>service nginx reload
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>service nginx status
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This script was created on Ubuntu Server 24.04 LTS.&lt;/p>
-&lt;h1 id="create-a-webhook">Create a webhook&lt;/h1>
-&lt;h2 id="create-webhookconf">Create webhook.conf&lt;/h2>
-&lt;p>With that script created (I named it &lt;code>hugo-deploy.sh&lt;/code>) and placed into a directory of your choice, we can now create a webhook. GitHub will call this webhook every time code is pushed to GitHub. This will automatically deploy the website.&lt;/p>
-&lt;p>I placed the following into &lt;code>/etc/webhook.conf&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>[
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;deploy&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;execute-command&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;/home/username/hugo-deploy.sh&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;command-working-directory&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;/home/username/&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;trigger-rule&amp;#34;&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;match&amp;#34;&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;payload-hash-sha1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;secret&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;your-secret&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;parameter&amp;#34;&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;source&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;header&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;X-Hub-Signature&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>]
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you placed your script into a file other than your home directory, the specific locations may differ.&lt;/p>
-&lt;h2 id="add-systemd-service">Add systemd service&lt;/h2>
-&lt;p>Lastly, I created a systemd service called &lt;code>webhook&lt;/code> located at &lt;code>/usr/lib/systemd/system/webhook.service&lt;/code>:&lt;/p>
-&lt;pre tabindex="0">&lt;code>[Unit]
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Web Development on KatieThe.Dev</title>
+    <link>/tags/web-development/</link>
+    <description>Recent content in Web Development on KatieThe.Dev</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>KatieTheDev</copyright>
+    <lastBuildDate>Wed, 16 Oct 2024 15:50:57 -0600</lastBuildDate><atom:link href="/tags/web-development/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Automating Hugo deployments with GitHub and Webhooks on Ubuntu 24.04 LTS</title>
+      <link>/posts/2024/10/16/hugo-automated-deployments-webhooks-ubuntu-24.04/</link>
+      <pubDate>Wed, 16 Oct 2024 15:50:57 -0600</pubDate>
+      
+      <guid>/posts/2024/10/16/hugo-automated-deployments-webhooks-ubuntu-24.04/</guid>
+      <description>&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;
+&lt;p&gt;In this blog post, I will walk you through the process of automating Hugo deployments using a bash script and setting up a webhook to streamline updates from GitHub. The guide is designed for users on Ubuntu Server 24.04 LTS and covers three main components:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Creating a Deployment Script: We will create a shell script that handles the tasks of pulling the latest code, building the Hugo site, and deploying it to the web directory. This script will ensure that your site is always up to date with the latest changes.&lt;/li&gt;
+&lt;li&gt;Configuring a Webhook: Once the deployment script is in place, we’ll set up a webhook configuration that allows GitHub to automatically trigger the deployment process every time you push code to your repository. This automation saves time and reduces the potential for manual errors.&lt;/li&gt;
+&lt;li&gt;Setting Up a Systemd Service: Finally, we’ll create a systemd service to manage the webhook, ensuring that it runs reliably and automatically on server startup. This includes configuring the service for SSL if needed.&lt;/li&gt;
+&lt;li&gt;Enable the webhook&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;
+&lt;p&gt;In this blog post, I will walk you through the process of automating Hugo deployments using a bash script and setting up a webhook to streamline updates from GitHub. The guide is designed for users on Ubuntu Server 24.04 LTS and covers three main components:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Creating a Deployment Script: We will create a shell script that handles the tasks of pulling the latest code, building the Hugo site, and deploying it to the web directory. This script will ensure that your site is always up to date with the latest changes.&lt;/li&gt;
+&lt;li&gt;Configuring a Webhook: Once the deployment script is in place, we’ll set up a webhook configuration that allows GitHub to automatically trigger the deployment process every time you push code to your repository. This automation saves time and reduces the potential for manual errors.&lt;/li&gt;
+&lt;li&gt;Setting Up a Systemd Service: Finally, we’ll create a systemd service to manage the webhook, ensuring that it runs reliably and automatically on server startup. This includes configuring the service for SSL if needed.&lt;/li&gt;
+&lt;li&gt;Enable the webhook&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p&gt;
+&lt;h1 id=&#34;create-hugo-deploy-script&#34;&gt;Create Hugo deploy script&lt;/h1&gt;
+&lt;p&gt;I use the following script to automate Hugo deployments.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Change directory into build directory&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd /home/katiethedev/build/katiethe.dev
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Remove existing files in build directory&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rm -rf public
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rm -rf resources
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Run git pull as username &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo -u username git pull
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Run Hugo with minify option to build a minified site, to save on bandwidth and storage. For development purposes you can remove --minify.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo -u username hugo --minify
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Change directories into web directory and then remove all present files&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd /var/www/katiethe.dev
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rm -rf *
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Copy all Hugo output files into web directory (switch username for your username)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp -r /home/username/build/katiethe.dev/public/* /var/www/katiethe.dev
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Change ownership of all files in web directory to my user (change username to your username, change usergroup to your usergroup [usually the same as username])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chown username:usergroup * -R
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Reload nginx, log nginx status to webhook log, or show if ran manually&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;service nginx reload
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;service nginx status 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This script was created on Ubuntu Server 24.04 LTS.&lt;/p&gt;
+&lt;h1 id=&#34;create-a-webhook&#34;&gt;Create a webhook&lt;/h1&gt;
+&lt;h2 id=&#34;create-webhookconf&#34;&gt;Create webhook.conf&lt;/h2&gt;
+&lt;p&gt;With that script created (I named it &lt;code&gt;hugo-deploy.sh&lt;/code&gt;) and placed into a directory of your choice, we can now create a webhook. GitHub will call this webhook every time code is pushed to GitHub. This will automatically deploy the website.&lt;/p&gt;
+&lt;p&gt;I placed the following into &lt;code&gt;/etc/webhook.conf&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;deploy&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;execute-command&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/home/username/hugo-deploy.sh&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;command-working-directory&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/home/username/&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;trigger-rule&amp;#34;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;match&amp;#34;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;payload-hash-sha1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;secret&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;your-secret&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;parameter&amp;#34;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;source&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;header&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;X-Hub-Signature&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    },
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you placed your script into a file other than your home directory, the specific locations may differ.&lt;/p&gt;
+&lt;h2 id=&#34;add-systemd-service&#34;&gt;Add systemd service&lt;/h2&gt;
+&lt;p&gt;Lastly, I created a systemd service called &lt;code&gt;webhook&lt;/code&gt; located at &lt;code&gt;/usr/lib/systemd/system/webhook.service&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[Unit]
 Description=Small server for creating HTTP endpoints (hooks)
 Documentation=https://github.com/adnanh/webhook/
 ConditionPathExists=/etc/webhook.conf
+
 [Service]
 ExecStart=/usr/bin/webhook -nopanic -hooks /etc/webhook.conf -secure -cert /etc/letsencrypt/live/katiethe.dev/fullchain.pem -key /etc/letsencrypt/live/katiethe.dev/privkey.pem -verbose
+
 [Install]
 WantedBy=multi-user.target
-&lt;/code>&lt;/pre>&lt;p>If you need SSL, replace the paths with the correct paths for your keys. Otherwise, feel free to remove them. My webhook is hosted behind NGINX, so I don&amp;rsquo;t use keys for my webhook. Instead, NGINX terminates SSL for me and then passes the request to the webhook.&lt;/p>
-&lt;h2 id="enable-the-webhook">Enable the webhook&lt;/h2>
-&lt;p>After creating all of those files, simply run &lt;code>sudo systemctl daemon-reload&lt;/code>, then enable and run the webhook:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo systemctl enable webhook
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo systemctl start webhook
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can now test your webhook with either curl or by adding it in GitHub. If you set a secret, make sure to add that to GitHub as well.&lt;/p>
-&lt;h2 id="view-webhook-logs">View Webhook Logs&lt;/h2>
-&lt;p>Webhooks can be viewed by running the following:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>journalctl -u webhook.service
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></content></item><item><title>Robots.txt</title><link>/posts/2024/10/16/robots-txt/</link><pubDate>Wed, 16 Oct 2024 12:40:57 -0600</pubDate><guid>/posts/2024/10/16/robots-txt/</guid><description>&lt;p>An updated copy of my robots.txt can be found below:
-&lt;pre>&lt;code>User-agent: GPTBot
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you need SSL, replace the paths with the correct paths for your keys. Otherwise, feel free to remove them. My webhook is hosted behind NGINX, so I don&amp;rsquo;t use keys for my webhook. Instead, NGINX terminates SSL for me and then passes the request to the webhook.&lt;/p&gt;
+&lt;h2 id=&#34;enable-the-webhook&#34;&gt;Enable the webhook&lt;/h2&gt;
+&lt;p&gt;After creating all of those files, simply run &lt;code&gt;sudo systemctl daemon-reload&lt;/code&gt;, then enable and run the webhook:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl enable webhook
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl start webhook
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can now test your webhook with either curl or by adding it in GitHub. If you set a secret, make sure to add that to GitHub as well.&lt;/p&gt;
+&lt;h2 id=&#34;view-webhook-logs&#34;&gt;View Webhook Logs&lt;/h2&gt;
+&lt;p&gt;Webhooks can be viewed by running the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;journalctl -u webhook.service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+    </item>
+    
+    <item>
+      <title>Robots.txt</title>
+      <link>/posts/2024/10/16/robots-txt/</link>
+      <pubDate>Wed, 16 Oct 2024 12:40:57 -0600</pubDate>
+      
+      <guid>/posts/2024/10/16/robots-txt/</guid>
+      <description>&lt;p&gt;An updated copy of my robots.txt can be found below:
+&lt;pre&gt;&lt;code&gt;User-agent: GPTBot
 Disallow: /
 User-agent: ChatGPT-User
 Disallow: /
+
 User-agent: Google-Extended
 Disallow: /
+
 User-agent: CCBot
 Disallow: /
+
 User-agent: PerplexityBot
 Disallow: /
+
 User-agent: anthropic-ai
 Disallow: /
 ‍User-agent: Claude-Web
 Disallow: /
 User-agent: ClaudeBot
 Disallow: /
-&lt;/code>&lt;/pre>&lt;/p>
-&lt;p>While all of my content (except for logos and images) is licensed under the Unlicense, I prefer that generative AI does not train on my website. Therefore, I have attempted to block such crawlers from my website.&lt;/p></description><content>&lt;p>An updated copy of my robots.txt can be found below:
-&lt;pre>&lt;code>User-agent: GPTBot
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;While all of my content (except for logos and images) is licensed under the Unlicense, I prefer that generative AI does not train on my website. Therefore, I have attempted to block such crawlers from my website.&lt;/p&gt;</description>
+      <content>&lt;p&gt;An updated copy of my robots.txt can be found below:
+&lt;pre&gt;&lt;code&gt;User-agent: GPTBot
 Disallow: /
 User-agent: ChatGPT-User
 Disallow: /
+
 User-agent: Google-Extended
 Disallow: /
+
 User-agent: CCBot
 Disallow: /
+
 User-agent: PerplexityBot
 Disallow: /
+
 User-agent: anthropic-ai
 Disallow: /
 ‍User-agent: Claude-Web
 Disallow: /
 User-agent: ClaudeBot
 Disallow: /
-&lt;/code>&lt;/pre>&lt;/p>
-&lt;p>While all of my content (except for logos and images) is licensed under the Unlicense, I prefer that generative AI does not train on my website. Therefore, I have attempted to block such crawlers from my website.&lt;/p>
-&lt;p>This can be accomplished with:&lt;/p>
-&lt;pre tabindex="0">&lt;code>User-agent: GPTBot
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;While all of my content (except for logos and images) is licensed under the Unlicense, I prefer that generative AI does not train on my website. Therefore, I have attempted to block such crawlers from my website.&lt;/p&gt;
+&lt;p&gt;This can be accomplished with:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;User-agent: GPTBot
 Disallow: /
 User-agent: ChatGPT-User
 Disallow: /
-&lt;/code>&lt;/pre>&lt;p>The following section can be used to block Google&amp;rsquo;s generative AI:&lt;/p>
-&lt;pre tabindex="0">&lt;code>User-agent: Google-Extended
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The following section can be used to block Google&amp;rsquo;s generative AI:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;User-agent: Google-Extended
 Disallow: /
-&lt;/code>&lt;/pre>&lt;p>Commoncrawl (CCBot) is a non-profit crawler, but their data is commonly used for AI training:&lt;/p>
-&lt;pre tabindex="0">&lt;code>User-agent: CCBot
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Commoncrawl (CCBot) is a non-profit crawler, but their data is commonly used for AI training:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;User-agent: CCBot
 Disallow: /
-&lt;/code>&lt;/pre>&lt;p>Perplexity AI can be blocked:&lt;/p>
-&lt;pre tabindex="0">&lt;code>User-agent: PerplexityBot
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Perplexity AI can be blocked:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;User-agent: PerplexityBot
 Disallow: /
-&lt;/code>&lt;/pre>&lt;p>Claude is blocked with:&lt;/p>
-&lt;pre tabindex="0">&lt;code>User-agent: anthropic-ai
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Claude is blocked with:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;User-agent: anthropic-ai
 Disallow: /
 ‍User-agent: Claude-Web
 Disallow: /
 User-agent: ClaudeBot
 Disallow: /
-&lt;/code>&lt;/pre></content></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;</content>
+    </item>
+    
+  </channel>
+</rss>
