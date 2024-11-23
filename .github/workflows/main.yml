@@ -1,0 +1,29 @@
+name: Deploy Hugo site to branch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: 'latest'
+          extended: true
+
+      - name: Build and deploy
+        uses: aormsby/hugo-deploy-to-pages@v2.1
+        with:
+          source_branch: 'main'
+          release_branch: 'deploy'
+          hugo_publish_directory: 'public'
