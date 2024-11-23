@@ -22,8 +22,7 @@ jobs:
           extended: true
 
       - name: Build and deploy
-        uses: aormsby/hugo-deploy-to-pages@v2.1
+        uses: peaceiris/hugo-deploy-to-pages@v4
         with:
-          source_branch: 'main'
-          release_branch: 'deploy'
-          hugo_publish_directory: 'public'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: your-branch
