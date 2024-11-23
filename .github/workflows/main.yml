@@ -22,7 +22,7 @@ jobs:
           extended: true
 
       - name: Build and deploy
-        uses: peaceiris/hugo-deploy-to-pages@v4
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: your-branch
