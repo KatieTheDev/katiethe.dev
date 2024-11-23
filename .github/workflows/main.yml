@@ -21,7 +21,10 @@ jobs:
           hugo-version: 'latest'
           extended: true
 
-      - name: Build and deploy
+      - name: Build
+        run: hugo --minify
+        
+      - name: Deploy to branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
