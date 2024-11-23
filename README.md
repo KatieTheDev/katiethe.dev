@@ -21,5 +21,7 @@ Run `hugo` in the main directory.
 All files will be output to /public.
 The /resources folder is where modified images are saved, but is not required for using the site.
 
+Alternatively, you may just download from the build branch which is automatically updated when changes are made to main. 
+
 ## Development
 New pages can be created with `hugo new`.
