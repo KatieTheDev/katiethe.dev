@@ -1,9 +1,9 @@
 {{- $date := .Date -}}
 {{- with .Params.dateFormat -}}
-  {{- $date | time.Format . -}}
+  {{- $date | time.Format .Params.dateFormat -}}
 {{- else -}}
   {{- with .Site.Params.dateFormat -}}
-    {{- $date | time.Format . -}}
+    {{- $date | time.Format .Site.Params.dateFormat -}}
   {{- else -}}
     {{- $date | time.Format "2006-01-02" -}}
   {{- end -}}
