@@ -15,18 +15,26 @@ jobs:
         run: |
             sudo locale-gen en_US
             sudo update-locale LANG=en_US
-      - name: date
+
+      - name: Date 1
         run: |
             date
+
       - name: Set Timezone
         uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: "Americas/Denver"
+
+      - name: Date 2
+        run: |
+            date
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
@@ -41,9 +49,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: deploy
-      - name: Webhook
-  uses: zzzze/webhook-trigger@master
-  with:
-    data: "{\"event_type\":\"build\"}"
-    webhook_url: ${{ secrets.WEBHOOK_URL }}
-    options: "-H \"Accept: application/vnd.github.everest-preview+json\" -H \"Authorization: token ${{ secrets.WEBHOOK_TOKEN }}\""
+
+      - name: Trigger
+        uses: zzzze/webhook-trigger@master
+        with:
+          data: "{\"event_type\":\"build\"}"
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          options: "-H \"Accept: application/vnd.github.everest-preview+json\" -H \"Authorization: token ${{ secrets.WEBHOOK_TOKEN }}\""
