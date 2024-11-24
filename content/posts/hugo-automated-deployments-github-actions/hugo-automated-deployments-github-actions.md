@@ -19,6 +19,7 @@ In this blog post, I will walk you through the process of automating Hugo deploy
 2.	Configuring a Webhook: Once the deployment script is in place, we’ll set up a webhook configuration that allows GitHub to automatically trigger the deployment process every time you push code to your repository. This automation saves time and reduces the potential for manual errors.
 3.	Setting Up a Systemd Service: Finally, we’ll create a systemd service to manage the webhook, ensuring that it runs reliably and automatically on server startup. This includes configuring the service for SSL if needed.
 4.	Enable the webhook
+5.  Create a GitHub Actions workflow. This comes with the added benefit of automated testing before uploading to your server. If the build fails, it will simply not complete the workflow!
 
 By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.
 # Create Hugo deploy script
