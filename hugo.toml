@@ -82,6 +82,7 @@ enableGitInfo = true
       missingBackButtonLabel = "Back to home page"
       minuteReadingTime = "min read"
       words = "words"
+      timeZone = "MST"
 
       [languages.en.params.logo]
         logoText = "KatieThe.Dev"
@@ -100,8 +101,6 @@ enableGitInfo = true
           identifier="posts"
           name="Posts"
           url="/posts"
-
-
 
 [markup]
   [markup.goldmark]
