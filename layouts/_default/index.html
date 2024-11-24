@@ -25,10 +25,10 @@
             <time class="post-date">
               {{- $date := .Date -}}
                 {{- with .Params.dateFormat -}}
-                  {{- $date | time.Format . -}} post 
+                  {{- $date | time.Format . -}} post
                 {{- else -}}
-                  {{- with .Site.Params.dateFormat -}} sits
-                    {{- $date | time.Format . -}}
+                  {{- with .Site.Params.dateFormat -}}
+                    {{- $date | time.Format . -}} site
                   {{- else -}}
                     {{- $date | time.Format "2006-01-02" -}} default
                   {{- end -}}
