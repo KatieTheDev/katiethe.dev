@@ -33,6 +33,7 @@
                     {{- $date | time.Format "2006-01-02" -}} default
                   {{- end -}}
                 {{- end -}}
+              partial is {{- partial "post-date.html" . -}}
             </time>
           {{- end -}}
           {{- with .Params.Author -}}
