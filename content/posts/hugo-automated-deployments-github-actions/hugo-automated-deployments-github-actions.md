@@ -1,6 +1,6 @@
 +++
-title = "Automating Hugo deployments with GitHub and Webhooks on Ubuntu 24.04 LTS"
-slug = "hugo-automated-deployments-webhooks-ubuntu-24.04"
+title = "Automating Hugo deployments with GitHub Actions and Webhooks on Ubuntu 24.04 LTS"
+slug = "hugo-automated-deployments-github-actions"
 date = "2024-11-24T00:54:34-07:00"
 author = "KatieTheDev"
 #cover = ""
