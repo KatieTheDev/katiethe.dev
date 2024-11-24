@@ -23,6 +23,13 @@ Please see LICENSE in the project root for more information.
 
 <!--{{ template "_internal/google_analytics.html" . }}-->
 
+{{ with resources.Get "js/copybutton.js" }}
+    {{ $minifiedScript := . | minify | fingerprint }}
+    <script src="{{ $minifiedScript.Permalink }}" integrity="{{ $minifiedScript.Data.Integrity }}" defer></script>
+{{ else }}
+    {{ errorf "copybutton.js not found in assets/js/" }}
+{{ end }}
+
 {{ $css := resources.Match "css/*.css" }}
 {{ range $css }}
   {{ $styles := . | minify | fingerprint }}
