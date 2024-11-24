@@ -5,6 +5,7 @@
 &lt;li>Configuring a Webhook: Once the deployment script is in place, we’ll set up a webhook configuration that allows GitHub to automatically trigger the deployment process every time you push code to your repository. This automation saves time and reduces the potential for manual errors.&lt;/li>
 &lt;li>Setting Up a Systemd Service: Finally, we’ll create a systemd service to manage the webhook, ensuring that it runs reliably and automatically on server startup. This includes configuring the service for SSL if needed.&lt;/li>
 &lt;li>Enable the webhook&lt;/li>
+&lt;li>Create a GitHub Actions workflow. This comes with the added benefit of automated testing before uploading to your server. If the build fails, it will simply not complete the workflow!&lt;/li>
 &lt;/ol>
 &lt;p>By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p></description><content>&lt;h1 id="overview">Overview&lt;/h1>
 &lt;p>In this blog post, I will walk you through the process of automating Hugo deployments using a bash script and setting up a webhook to streamline updates from GitHub. The guide is designed for users on Ubuntu Server 24.04 LTS and covers three main components:&lt;/p>
@@ -13,6 +14,7 @@
 &lt;li>Configuring a Webhook: Once the deployment script is in place, we’ll set up a webhook configuration that allows GitHub to automatically trigger the deployment process every time you push code to your repository. This automation saves time and reduces the potential for manual errors.&lt;/li>
 &lt;li>Setting Up a Systemd Service: Finally, we’ll create a systemd service to manage the webhook, ensuring that it runs reliably and automatically on server startup. This includes configuring the service for SSL if needed.&lt;/li>
 &lt;li>Enable the webhook&lt;/li>
+&lt;li>Create a GitHub Actions workflow. This comes with the added benefit of automated testing before uploading to your server. If the build fails, it will simply not complete the workflow!&lt;/li>
 &lt;/ol>
 &lt;p>By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p>
 &lt;h1 id="create-hugo-deploy-script">Create Hugo deploy script&lt;/h1>
