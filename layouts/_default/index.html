@@ -24,7 +24,7 @@
           {{- if .Date -}}
             <time class="post-date">
               {{- $dateFormat := or .Params.dateFormat .Site.Params.dateFormat "2006-01-02" -}}
-              {{- partial "post-date" (dict "Date" .Date "dateFormat" $dateFormat) -}}
+              {{- .Date | time.Format $dateFormat -}}
             </time>
           {{- end -}}
           {{- with .Params.Author -}}
