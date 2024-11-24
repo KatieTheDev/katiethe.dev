@@ -19,31 +19,31 @@ Replace (old-vmid) with the current VMID and (new-vmid) with the desired VMID. R
 
 If you are not in a cluster, the config file may also be at `/etc/pve/qemu-server/`.
 # Shut down VM
-```
+```bash
 qm shutdown (old-vmid)
 ```
 
 # Optional: Rename disks
 ## Rename disks in config file
-```
+```bash
 vim /etc/pve/nodes/(node)/qemu-server/(old-vmid).conf
 ```
 ## List ZFS volumes
-```
+```bash
 zfs list -t all
 ```
 ## Rename ZFS volumes (rename all affected)
-```
+```bash
 zfs rename rpool/data/vm-(old-vmid)-disk-0 rpool/data/vm-(new-vmid)-disk-0
 ```
 
 # Rename config file
-```
+```bash
 mv /etc/pve/nodes/(node)/qemu-server/(old-vmid).conf /etc/pve/nodes/(node)/qemu-server/(new-vmid).conf
 ```
 
 # Start VM
 **Host restart is *not* required**
-```
+```bash
 qm start (new-vmid)
 ```
