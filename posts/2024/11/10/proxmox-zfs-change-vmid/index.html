@@ -17,6 +17,14 @@
 
 
 
+    
+    <script src="/js/copybutton.min.a48e6828da436de32d10a615cb3004fd3348a7da47c661db91071e2b87a4294a.js" integrity="sha256-pI5oKNpDbeMtEKYVyzAE/TNIp9pHxmHbkQceK4ekKUo=" defer></script>
+
+
+
+
+  
+  <link rel="stylesheet" href="/css/copybutton.min.75f5869b00f9412a4549d98b7c11ffd9e909f2f91f9377ca8a54e3f73929da8f.css">
 
   
   <link rel="stylesheet" href="/css/post.min.a8e20cef7b7fb9121bd2bc5218fdbd711794e98ca0a77c5925a942f0c18d225a.css">
@@ -178,7 +186,7 @@
   <h1 class="post-title">
     <a href="/posts/2024/11/10/proxmox-zfs-change-vmid/">How to change Proxmox VMIDs (ZFS)</a>
   </h1>
-  <div class="post-meta"><time class="post-date">2024-11-10 23:44:53 -0700&nbsp;[Last Updated 2024-11-18 16:09:54 -0700]</time><span class="post-reading-time">1 min read (107 words)</span></div>
+  <div class="post-meta"><time class="post-date">2024-11-10 23:44:53 -0700&nbsp;[Last Updated 2024-11-24 00:09:21 -0700]</time><span class="post-reading-time">1 min read (107 words)</span></div>
 
   
   
@@ -213,20 +221,20 @@
 <p>Replace (old-vmid) with the current VMID and (new-vmid) with the desired VMID. Replace (node) with the name of the Proxmox node.</p>
 <p>If you are not in a cluster, the config file may also be at <code>/etc/pve/qemu-server/</code>.</p>
 <h1 id="shut-down-vm">Shut down VM<a href="#shut-down-vm" class="hanchor" ariaLabel="Anchor">#</a> </h1>
-<pre tabindex="0"><code>qm shutdown (old-vmid)
-</code></pre><h1 id="optional-rename-disks">Optional: Rename disks<a href="#optional-rename-disks" class="hanchor" ariaLabel="Anchor">#</a> </h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm shutdown <span style="color:#f92672">(</span>old-vmid<span style="color:#f92672">)</span>
+</span></span></code></pre></div><h1 id="optional-rename-disks">Optional: Rename disks<a href="#optional-rename-disks" class="hanchor" ariaLabel="Anchor">#</a> </h1>
 <h2 id="rename-disks-in-config-file">Rename disks in config file<a href="#rename-disks-in-config-file" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<pre tabindex="0"><code>vim /etc/pve/nodes/(node)/qemu-server/(old-vmid).conf
-</code></pre><h2 id="list-zfs-volumes">List ZFS volumes<a href="#list-zfs-volumes" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<pre tabindex="0"><code>zfs list -t all
-</code></pre><h2 id="rename-zfs-volumes-rename-all-affected">Rename ZFS volumes (rename all affected)<a href="#rename-zfs-volumes-rename-all-affected" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<pre tabindex="0"><code>zfs rename rpool/data/vm-(old-vmid)-disk-0 rpool/data/vm-(new-vmid)-disk-0
-</code></pre><h1 id="rename-config-file">Rename config file<a href="#rename-config-file" class="hanchor" ariaLabel="Anchor">#</a> </h1>
-<pre tabindex="0"><code>mv /etc/pve/nodes/(node)/qemu-server/(old-vmid).conf /etc/pve/nodes/(node)/qemu-server/(new-vmid).conf
-</code></pre><h1 id="start-vm">Start VM<a href="#start-vm" class="hanchor" ariaLabel="Anchor">#</a> </h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>vim /etc/pve/nodes/<span style="color:#f92672">(</span>node<span style="color:#f92672">)</span>/qemu-server/<span style="color:#f92672">(</span>old-vmid<span style="color:#f92672">)</span>.conf
+</span></span></code></pre></div><h2 id="list-zfs-volumes">List ZFS volumes<a href="#list-zfs-volumes" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>zfs list -t all
+</span></span></code></pre></div><h2 id="rename-zfs-volumes-rename-all-affected">Rename ZFS volumes (rename all affected)<a href="#rename-zfs-volumes-rename-all-affected" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>zfs rename rpool/data/vm-<span style="color:#f92672">(</span>old-vmid<span style="color:#f92672">)</span>-disk-0 rpool/data/vm-<span style="color:#f92672">(</span>new-vmid<span style="color:#f92672">)</span>-disk-0
+</span></span></code></pre></div><h1 id="rename-config-file">Rename config file<a href="#rename-config-file" class="hanchor" ariaLabel="Anchor">#</a> </h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mv /etc/pve/nodes/<span style="color:#f92672">(</span>node<span style="color:#f92672">)</span>/qemu-server/<span style="color:#f92672">(</span>old-vmid<span style="color:#f92672">)</span>.conf /etc/pve/nodes/<span style="color:#f92672">(</span>node<span style="color:#f92672">)</span>/qemu-server/<span style="color:#f92672">(</span>new-vmid<span style="color:#f92672">)</span>.conf
+</span></span></code></pre></div><h1 id="start-vm">Start VM<a href="#start-vm" class="hanchor" ariaLabel="Anchor">#</a> </h1>
 <p><strong>Host restart is <em>not</em> required</strong></p>
-<pre tabindex="0"><code>qm start (new-vmid)
-</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm start <span style="color:#f92672">(</span>new-vmid<span style="color:#f92672">)</span>
+</span></span></code></pre></div>
       </div></div>
 
   
