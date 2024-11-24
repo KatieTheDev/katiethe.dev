@@ -1,5 +1,7 @@
 name: Deploy Hugo site to branch
-
+env:
+  LANG: "en_US"
+  
 on:
   push:
     branches:
@@ -9,12 +11,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Set locale
+        run: |
+            sudo locale-gen en_US
+            sudo update-locale LANG=en_US
+      - name: date
+        run: |
+            date
+      - name: Set Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: "Americas/Denver"
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
-
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
