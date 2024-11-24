@@ -78,7 +78,7 @@ If you placed your script into a file other than your home directory, the specif
 
 ## Add systemd service
 Lastly, I created a systemd service called `webhook` located at `/usr/lib/systemd/system/webhook.service`:
-```
+```text
 [Unit]
 Description=Small server for creating HTTP endpoints (hooks)
 Documentation=https://github.com/adnanh/webhook/
