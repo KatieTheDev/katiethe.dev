@@ -55,10 +55,16 @@ jobs:
         with:
           cf_zone_id: ${{ secrets.CF_ZONE_ID }}
           cf_api_key: ${{ secrets.CF_API_KEY }}
-          
-      - name: Trigger
+      - name: Generate SHA1 Hash
+        id: generate_hash
+        run: |
+          secret="${{ secrets.WEBHOOK_TOKEN }}"
+          payload='{"event_type":"build"}'
+          hash=$(echo -n "$payload" | openssl dgst -sha1 -hmac "$secret" | awk '{print $2}')
+          echo "::set-output name=hash::sha1=$hash"
+      - name: Trigger Webhook
         uses: zzzze/webhook-trigger@master
         with:
           data: "{\"event_type\":\"build\"}"
           webhook_url: ${{ secrets.WEBHOOK_URL }}
-          options: "-H \"Accept: application/vnd.github.everest-preview+json\" -H \"Authorization: token ${{ secrets.WEBHOOK_TOKEN }}\""
+          options: "-H \"Accept: application/vnd.github.everest-preview+json\" -H \"Authorization: ${{ steps.generate_hash.outputs.hash }}\""
