@@ -50,7 +50,7 @@ jobs:
       - name: Deploy to branch
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.TOKEN }}
           publish_branch: deploy
 
       - name: Bypass Cloudflare for GitHub Action
