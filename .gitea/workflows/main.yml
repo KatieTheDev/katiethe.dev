@@ -1,0 +1,64 @@
+name: Deploy Hugo site to branch
+env:
+  LANG: "en_US"
+  
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set locale
+        run: |
+            sudo locale-gen en_US
+            sudo update-locale LANG=en_US
+
+      - name: Date 1
+        run: |
+            date
+
+      - name: Set Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: "Americas/Denver"
+
+      - name: Date 2
+        run: |
+            date
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: 'latest'
+          extended: true
+
+      - name: Build
+        run: hugo --minify
+        
+      - name: Deploy to branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: deploy
+
+      - name: Bypass Cloudflare for GitHub Action
+        uses: xiaotianxt/bypass-cloudflare-for-github-action@v1.0.0
+        with:
+          cf_zone_id: ${{ secrets.CF_ZONE_ID }}
+          cf_api_key: ${{ secrets.CF_API_KEY }}
+          
+      - name: Trigger Webhook
+        uses: zzzze/webhook-trigger@master
+        with:
+          data: "{\"event_type\":\"build\"}"
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          options: "-H \"Accept: application/vnd.github.everest-preview+json\" -H \"Authorization: ${{ secrets.WEBHOOK_TOKEN }}\""
