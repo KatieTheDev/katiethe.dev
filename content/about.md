@@ -15,5 +15,7 @@ An up-to-date copy of my robots.txt can be found [here](/robots.txt). An explain
 # PGP
 Any new PGP keys will be posted as signed by my previous key. If new keys are posted without a signature, it may indicate I was compromised in some way.
 
+A revocation message and certificate can be found for a previous key can be found [here](/oldkey.txt).
+
 My PGP public key is ([raw](/KatieTheDev_0x6D281D03_public.asc)):
 {{< snippet "/static/KatieTheDev_0x6D281D03_public.asc" >}}
