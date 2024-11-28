@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Set locale
         run: |
-            sudo apt- clean
-            sudo apt-get update
+            sudo apt clean
+            sudo apt update
             sudo apt install -y locales
             sudo locale-gen en_US
             sudo update-locale LANG=en_US
