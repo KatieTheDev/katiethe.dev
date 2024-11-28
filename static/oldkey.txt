@@ -1,0 +1,64 @@
+The following contains a revocation certificate for my old key, as well as a signed message that this is my new PGP key. This is because the old key was generated insecurely and this key is more secure.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+This is my new PGP key as of 10/16/2024:
+- -----BEGIN PGP PUBLIC KEY BLOCK-----
+Comment: User ID:	KatieTheDev <contact@katiethe.dev>
+Comment: Valid from:	10/16/24 11:59 AM
+Comment: Valid until:	10/16/26 12:00 PM
+Comment: Type:	255-bit EdDSA
+Comment: Usage:	Signing, Encryption, Certifying User IDs
+Comment: Fingerprint:	BFECFEACB1616BE1D8FE6FC395295AE86D281D03
+
+mDMEZw/++BYJKwYBBAHaRw8BAQdA0mnNsf9zMCHFltUMFzsVr+dW2Ht1TtD8X5p8
+wieHIcq0IkthdGllVGhlRGV2IDxjb250YWN0QGthdGlldGhlLmRldj6ImQQTFgoA
+QRYhBL/s/qyxYWvh2P5vw5UpWuhtKB0DBQJnD/74AhsDBQkDwmcoBQsJCAcCAiIC
+BhUKCQgLAgQWAgMBAh4HAheAAAoJEJUpWuhtKB0Dr48A/17FIxtwIYxfMh2f7XwV
+1shWRA9v/5UdsDwOJQuzI8HqAQC9h1g/l0tDAr2XbXzzvgU1RgfrB6mf0JF9mByb
+GdcqDrg4BGcP/vgSCisGAQQBl1UBBQEBB0Bsey4WGFbTE6SFyOtyefWIiN53dnJu
+2swrY8xW8JTrMAMBCAeIfgQYFgoAJhYhBL/s/qyxYWvh2P5vw5UpWuhtKB0DBQJn
+D/74AhsMBQkDwmcoAAoJEJUpWuhtKB0D2AMBAPNMIMPMO5P4InPMPAaErKIvKQl1
+GSYneac1cnoh+avVAP0RaHmkw+rStBroUj3uUzZCqC+OIhNZzepIM06NTYGMBA==
+=hYbD
+- -----END PGP PUBLIC KEY BLOCK-----
+Key this message was signed with, and is now revoked:
+- -----BEGIN PGP PUBLIC KEY BLOCK-----
+Comment: User ID:	Katie
+Comment: Valid from:	8/9/24 12:31 AM
+Comment: Valid until:	8/9/26 12:00 PM
+Comment: Type:	255-bit EdDSA (secret key available)
+Comment: Usage:	Signing, Encryption, Certifying User IDs
+Comment: Fingerprint:	EB1DC2746933AFDE699F2E7EB602C0C1B6CF270F
+
+mDMEZrW3pBYJKwYBBAHaRw8BAQdA7Tpx98Xq7zCwbk+yb5FxyKNr0PeTLogmiHh1
+eB6iW0O0BUthdGlliJkEExYKAEEWIQTrHcJ0aTOv3mmfLn62AsDBts8nDwUCZrW3
+pAIbAwUJA8MIfAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRC2AsDBts8n
+D/FXAQDwcch+078JUSVXw094Xgm2bxkByHkcTduiNXUH05vM2QD9FPib9k1OlpXq
+YPe2Lo9XrcDUG/FanVDbV0ET/yCYtQq4OARmtbekEgorBgEEAZdVAQUBAQdA8Q6G
+Q3S3kON6iMOS189AqrvyMLqNwBE0ZlK0fKiABiMDAQgHiH4EGBYKACYWIQTrHcJ0
+aTOv3mmfLn62AsDBts8nDwUCZrW3pAIbDAUJA8MIfAAKCRC2AsDBts8nD478AQD+
+wHwDKmDPvurCiHBFyjhIOrUDCxY+Wmb1PdHXcxoSxgEApin2wVolm0D9e8mhkDDd
+27y3hZnMVheGlUtk2Jl/XA0=
+=hVRk
+- -----END PGP PUBLIC KEY BLOCK-----
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQTrHcJ0aTOv3mmfLn62AsDBts8nDwUCZ0j1swAKCRC2AsDBts8n
+D+tkAQD6Lya51lNIhclLV/arZR/CF66wjrQYpeTeT1aMas9N1AEAg2zB/uBKJle0
+WIaLPhIQe5CQufuccYX4Qt4qtgBotgw=
+=wU4g
+-----END PGP SIGNATURE-----
+
+Revocation certificate:
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Comment: This is a revocation certificate
+
+iMAEIBYKAGgWIQTrHcJ0aTOv3mmfLn62AsDBts8nDwUCZ0j2mUodAVRoaXMga2V5
+IGhhcyBiZWVuIHN1cGVyc2VkZWQgYnkgQkZFQ0ZFQUNCMTYxNkJFMUQ4RkU2RkMz
+OTUyOTVBRTg2RDI4MUQwMwAKCRC2AsDBts8nD1rfAQD4yFmg1cRNC8M4R4nW31h6
+/Onkl7YLB5HLiTt1W07lLAD+Kug8C6kdIO+syUQLPFjiuE/vqNGS6yq7kVBsnV6w
+sAw=
+=W8Nz
+-----END PGP PUBLIC KEY BLOCK-----
+
