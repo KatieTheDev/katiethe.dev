@@ -349,6 +349,7 @@ class="text-accent-color"
 &lt;p>An up-to-date copy of my robots.txt can be found &lt;a href="/robots.txt">here&lt;/a>. An explaination of my robots policy can be found at&lt;/p>
 &lt;h1 id="pgp">PGP&lt;/h1>
 &lt;p>Any new PGP keys will be posted as signed by my previous key. If new keys are posted without a signature, it may indicate I was compromised in some way.&lt;/p>
+&lt;p>A revocation message and certificate can be found for a previous key can be found &lt;a href="/oldkey.txt">here&lt;/a>.&lt;/p>
 &lt;p>My PGP public key is (&lt;a href="/KatieTheDev_0x6D281D03_public.asc">raw&lt;/a>):
 &lt;pre>&lt;code>-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: User-ID: KatieTheDev &amp;lt;contact@katiethe.dev&amp;gt;
