@@ -63,3 +63,4 @@ jobs:
         run: |
           curl -X POST "${{ secrets.WEBHOOK_URL }}" \
             -H "Authorization: ${{ secrets.WEBHOOK_TOKEN }}" \
+            -w "HTTP Status: %{http_code}\n"
