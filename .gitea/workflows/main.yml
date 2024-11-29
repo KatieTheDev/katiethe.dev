@@ -25,7 +25,8 @@ jobs:
 
       - name: Set Timezone
         run: |
-            sudo timedatectl set-timezone America/Denver
+            sudo ln -sf /usr/share/zoneinfo/America/Denver /etc/localtime
+            sudo dpkg-reconfigure -f noninteractive tzdata
 
       - name: Date 2
         run: |
