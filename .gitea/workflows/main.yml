@@ -54,7 +54,7 @@ jobs:
           publish_branch: deploy
 
       - name: Bypass Cloudflare for GitHub Action
-        uses: https://gitea.katiethe.dev/KatieTheDev/bypass-cloudflare-for-github-action@1.2.0
+        uses: xiaotianxt/bypass-cloudflare-for-github-action@v1.0.0
         with:
           cf_zone_id: ${{ secrets.CF_ZONE_ID }}
           cf_api_key: ${{ secrets.CF_API_KEY }}
