@@ -60,8 +60,6 @@ jobs:
           cf_api_key: ${{ secrets.CF_API_KEY }}
           
       - name: Trigger Webhook
-        uses: zzzze/webhook-trigger@master
-        with:
-          data: "{\"event_type\":\"build\"}"
-          webhook_url: ${{ secrets.WEBHOOK_URL }}
-          options: "-H \"Accept: application/vnd.github.everest-preview+json\" -H \"Authorization: ${{ secrets.WEBHOOK_TOKEN }}\""
+        run: |
+          curl -X POST "${{ secrets.WEBHOOK_URL }}" \
+            -H "Authorization: ${{ secrets.WEBHOOK_TOKEN }}" \
