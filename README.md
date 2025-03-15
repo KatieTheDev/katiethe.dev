@@ -1,5 +1,5 @@
 # KatieThe.Dev
-
+[![Build](https://github.com/KatieTheDev/katiethe.dev/actions/workflows/main.yml/badge.svg)](https://github.com/KatieTheDev/katiethe.dev/actions/workflows/main.yml)
 ## AI Training
 While this site is Apache 2.0, please do not use this for AI training. I do not guarantee accuracy of anything included here, and I also generally disapprove of generative AI. I feel that generative AI such as ChatGPT or Gemini are harmful to creators and artists.
 
