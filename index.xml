@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>KatieThe.Dev</title><link>/</link><description>Recent content on KatieThe.Dev</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>KatieTheDev</copyright><lastBuildDate>Mon, 14 Oct 2024 21:28:24 -0600</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Automating Hugo deployments with GitHub Actions and Webhooks on Ubuntu 24.04 LTS</title><link>/posts/2024/11/24/hugo-automated-deployments-github-actions/</link><pubDate>Sun, 24 Nov 2024 00:54:34 -0700</pubDate><guid>/posts/2024/11/24/hugo-automated-deployments-github-actions/</guid><description>&lt;h1 id="overview">Overview&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>KatieThe.Dev</title><link>/</link><description>Recent content on KatieThe.Dev</description><generator>Hugo</generator><language>en</language><copyright>KatieTheDev</copyright><lastBuildDate>Thu, 28 Nov 2024 16:13:31 -0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Automating Hugo deployments with GitHub Actions and Webhooks on Ubuntu 24.04 LTS</title><link>/posts/2024/11/24/hugo-automated-deployments-github-actions/</link><pubDate>Sun, 24 Nov 2024 00:54:34 -0700</pubDate><guid>/posts/2024/11/24/hugo-automated-deployments-github-actions/</guid><description>&lt;h1 id="overview">Overview&lt;/h1>
 &lt;p>In this blog post, I will walk you through the process of automating Hugo deployments using a bash script and setting up a webhook to streamline updates from GitHub. The guide is designed for users on Ubuntu Server 24.04 LTS and covers three main components:&lt;/p>
 &lt;ol>
 &lt;li>Creating a Deployment Script: We will create a shell script that handles the tasks of pulling the latest code, building the Hugo site, and deploying it to the web directory. This script will ensure that your site is always up to date with the latest changes.&lt;/li>
@@ -7,131 +7,7 @@
 &lt;li>Enable the webhook&lt;/li>
 &lt;li>Create a GitHub Actions workflow. This comes with the added benefit of automated testing before uploading to your server. If the build fails, it will simply not complete the workflow!&lt;/li>
 &lt;/ol>
-&lt;p>By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p></description><content>&lt;h1 id="overview">Overview&lt;/h1>
-&lt;p>In this blog post, I will walk you through the process of automating Hugo deployments using a bash script and setting up a webhook to streamline updates from GitHub. The guide is designed for users on Ubuntu Server 24.04 LTS and covers three main components:&lt;/p>
-&lt;ol>
-&lt;li>Creating a Deployment Script: We will create a shell script that handles the tasks of pulling the latest code, building the Hugo site, and deploying it to the web directory. This script will ensure that your site is always up to date with the latest changes.&lt;/li>
-&lt;li>Configuring a Webhook: Once the deployment script is in place, we’ll set up a webhook configuration that allows GitHub to automatically trigger the deployment process every time you push code to your repository. This automation saves time and reduces the potential for manual errors.&lt;/li>
-&lt;li>Setting Up a Systemd Service: Finally, we’ll create a systemd service to manage the webhook, ensuring that it runs reliably and automatically on server startup. This includes configuring the service for SSL if needed.&lt;/li>
-&lt;li>Enable the webhook&lt;/li>
-&lt;li>Create a GitHub Actions workflow. This comes with the added benefit of automated testing before uploading to your server. If the build fails, it will simply not complete the workflow!&lt;/li>
-&lt;/ol>
-&lt;p>By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p>
-&lt;h1 id="create-hugo-deploy-script">Create Hugo deploy script&lt;/h1>
-&lt;p>I use the following script to automate Hugo deployments.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>cd /var/www/katiethe.dev
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git pull
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo service nginx reload
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>service nginx status
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This script was created on Ubuntu Server 24.04 LTS.&lt;/p>
-&lt;h1 id="create-a-webhook">Create a webhook&lt;/h1>
-&lt;h2 id="create-webhookconf">Create webhook.conf&lt;/h2>
-&lt;p>With that script created (I named it &lt;code>hugo-deploy.sh&lt;/code>) and placed into a directory of your choice, we can now create a webhook. GitHub will call this webhook every time code is pushed to GitHub. This will automatically deploy the website.&lt;/p>
-&lt;p>I placed the following into &lt;code>/etc/webhook.conf&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>[
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;deploy&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;execute-command&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;/home/username/hugo-deploy.sh&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;command-working-directory&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;/home/username/&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;trigger-rule&amp;#34;&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;match&amp;#34;&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;payload-hash-sha1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;secret&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;your-secret&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;parameter&amp;#34;&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;source&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;header&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;X-Hub-Signature&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>]
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you placed your script into a file other than your home directory, the specific locations may differ.&lt;/p>
-&lt;h2 id="add-systemd-service">Add systemd service&lt;/h2>
-&lt;p>Lastly, I created a systemd service called &lt;code>webhook&lt;/code> located at &lt;code>/usr/lib/systemd/system/webhook.service&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>[Unit]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Description=Small server for creating HTTP endpoints (hooks)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Documentation=https://github.com/adnanh/webhook/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ConditionPathExists=/etc/webhook.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[Service]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ExecStart=/usr/bin/webhook -nopanic -hooks /etc/webhook.conf -secure -cert /etc/letsencrypt/live/katiethe.dev/fullchain.pem -key /etc/letsencrypt/live/katiethe.dev/privkey.pem -verbose
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[Install]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>WantedBy=multi-user.target
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you need SSL, replace the paths with the correct paths for your keys. Otherwise, feel free to remove them. My webhook is hosted behind NGINX, so I don&amp;rsquo;t use keys for my webhook. Instead, NGINX terminates SSL for me and then passes the request to the webhook.&lt;/p>
-&lt;h2 id="enable-the-webhook">Enable the webhook&lt;/h2>
-&lt;p>After creating all of those files, simply run &lt;code>sudo systemctl daemon-reload&lt;/code>, then enable and run the webhook:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo systemctl enable webhook
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo systemctl start webhook
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can now test your webhook with either curl or by adding it in GitHub. If you set a secret, make sure to add that to GitHub as well.&lt;/p>
-&lt;h2 id="view-webhook-logs">View Webhook Logs&lt;/h2>
-&lt;p>Webhooks can be viewed by running the following:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>journalctl -u webhook.service
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="create-github-actions-script">Create GitHub Actions Script&lt;/h1>
-&lt;p>I placed the following at .github/workflows/main.yml:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yml" data-lang="yml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Deploy Hugo site to branch&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">env&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">LANG&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;en_US&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">on&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">push&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">branches&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">main&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">deploy&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-latest&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Set locale&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> sudo locale-gen en_US
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> sudo update-locale LANG=en_US&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Date 1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> date&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Set Timezone&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">szenius/set-timezone@v2.0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">timezoneLinux&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Americas/Denver&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Date 2&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> date&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Checkout code&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@v4&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">submodules&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">fetch-depth&lt;/span>: &lt;span style="color:#ae81ff">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Setup Hugo&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">peaceiris/actions-hugo@v3&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">hugo-version&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;latest&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">extended&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Build&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">hugo --minify&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Deploy to branch&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">peaceiris/actions-gh-pages@v4&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">github_token&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">publish_branch&lt;/span>: &lt;span style="color:#ae81ff">deploy&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Trigger&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">zzzze/webhook-trigger@master&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">data&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;{\&amp;#34;event_type\&amp;#34;:\&amp;#34;build\&amp;#34;}&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">webhook_url&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.WEBHOOK_URL }}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">options&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;-H \&amp;#34;Accept: application/vnd.github.everest-preview+json\&amp;#34; -H \&amp;#34;Authorization: token ${{ secrets.WEBHOOK_TOKEN }}\&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will automatically build and deploy the Hugo site with GitHub Actions and then call the webhook to pull the updated deploy branch. &lt;strong>Make sure you checkout the deploy branch when cloning your repository to /var/www.&lt;/strong>&lt;/p></content></item><item><title>How to change Proxmox VMIDs (ZFS)</title><link>/posts/2024/11/10/proxmox-zfs-change-vmid/</link><pubDate>Sun, 10 Nov 2024 23:44:53 -0700</pubDate><guid>/posts/2024/11/10/proxmox-zfs-change-vmid/</guid><description>&lt;h1 id="overview">Overview&lt;/h1>
+&lt;p>By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p></description></item><item><title>How to change Proxmox VMIDs (ZFS)</title><link>/posts/2024/11/10/proxmox-zfs-change-vmid/</link><pubDate>Sun, 10 Nov 2024 23:44:53 -0700</pubDate><guid>/posts/2024/11/10/proxmox-zfs-change-vmid/</guid><description>&lt;h1 id="overview">Overview&lt;/h1>
 &lt;p>This guide will walk you through changing a Proxmox VE VMID for systems running ZFS. Other systems may require different steps.&lt;/p>
 &lt;p>Replace (old-vmid) with the current VMID and (new-vmid) with the desired VMID. Replace (node) with the name of the Proxmox node.&lt;/p>
 &lt;p>If you are not in a cluster, the config file may also be at &lt;code>/etc/pve/qemu-server/&lt;/code>.&lt;/p>
@@ -147,52 +23,10 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="rename-config-file">Rename config file&lt;/h1>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mv /etc/pve/nodes/&lt;span style="color:#f92672">(&lt;/span>node&lt;span style="color:#f92672">)&lt;/span>/qemu-server/&lt;span style="color:#f92672">(&lt;/span>old-vmid&lt;span style="color:#f92672">)&lt;/span>.conf /etc/pve/nodes/&lt;span style="color:#f92672">(&lt;/span>node&lt;span style="color:#f92672">)&lt;/span>/qemu-server/&lt;span style="color:#f92672">(&lt;/span>new-vmid&lt;span style="color:#f92672">)&lt;/span>.conf
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="start-vm">Start VM&lt;/h1>
-&lt;p>&lt;strong>Host restart is &lt;em>not&lt;/em> required&lt;/strong>&lt;/p></description><content>&lt;h1 id="overview">Overview&lt;/h1>
-&lt;p>This guide will walk you through changing a Proxmox VE VMID for systems running ZFS. Other systems may require different steps.&lt;/p>
-&lt;p>Replace (old-vmid) with the current VMID and (new-vmid) with the desired VMID. Replace (node) with the name of the Proxmox node.&lt;/p>
-&lt;p>If you are not in a cluster, the config file may also be at &lt;code>/etc/pve/qemu-server/&lt;/code>.&lt;/p>
-&lt;h1 id="shut-down-vm">Shut down VM&lt;/h1>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>qm shutdown &lt;span style="color:#f92672">(&lt;/span>old-vmid&lt;span style="color:#f92672">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="optional-rename-disks">Optional: Rename disks&lt;/h1>
-&lt;h2 id="rename-disks-in-config-file">Rename disks in config file&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>vim /etc/pve/nodes/&lt;span style="color:#f92672">(&lt;/span>node&lt;span style="color:#f92672">)&lt;/span>/qemu-server/&lt;span style="color:#f92672">(&lt;/span>old-vmid&lt;span style="color:#f92672">)&lt;/span>.conf
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="list-zfs-volumes">List ZFS volumes&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>zfs list -t all
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="rename-zfs-volumes-rename-all-affected">Rename ZFS volumes (rename all affected)&lt;/h2>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>zfs rename rpool/data/vm-&lt;span style="color:#f92672">(&lt;/span>old-vmid&lt;span style="color:#f92672">)&lt;/span>-disk-0 rpool/data/vm-&lt;span style="color:#f92672">(&lt;/span>new-vmid&lt;span style="color:#f92672">)&lt;/span>-disk-0
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="rename-config-file">Rename config file&lt;/h1>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mv /etc/pve/nodes/&lt;span style="color:#f92672">(&lt;/span>node&lt;span style="color:#f92672">)&lt;/span>/qemu-server/&lt;span style="color:#f92672">(&lt;/span>old-vmid&lt;span style="color:#f92672">)&lt;/span>.conf /etc/pve/nodes/&lt;span style="color:#f92672">(&lt;/span>node&lt;span style="color:#f92672">)&lt;/span>/qemu-server/&lt;span style="color:#f92672">(&lt;/span>new-vmid&lt;span style="color:#f92672">)&lt;/span>.conf
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="start-vm">Start VM&lt;/h1>
-&lt;p>&lt;strong>Host restart is &lt;em>not&lt;/em> required&lt;/strong>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>qm start &lt;span style="color:#f92672">(&lt;/span>new-vmid&lt;span style="color:#f92672">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></content></item><item><title>The Democrats' Great Failure of 2024</title><link>/posts/2024/11/10/democrats-great-failure-2024/</link><pubDate>Sun, 10 Nov 2024 16:53:00 -0700</pubDate><guid>/posts/2024/11/10/democrats-great-failure-2024/</guid><description>&lt;p>&lt;em>Like all articles on this site, this article is provided ad-free with no monetization model. I also do not collect personal data and have declared all original works (except images) as public domain. If you would like to support my work, please share this page. Feel free to donate as well, just contact me using my contact page.&lt;/em>&lt;/p>
+&lt;p>&lt;strong>Host restart is &lt;em>not&lt;/em> required&lt;/strong>&lt;/p></description></item><item><title>The Democrats' Great Failure of 2024</title><link>/posts/2024/11/10/democrats-great-failure-2024/</link><pubDate>Sun, 10 Nov 2024 16:53:00 -0700</pubDate><guid>/posts/2024/11/10/democrats-great-failure-2024/</guid><description>&lt;p>&lt;em>Like all articles on this site, this article is provided ad-free with no monetization model. I also do not collect personal data and have declared all original works (except images) as public domain. If you would like to support my work, please share this page. Feel free to donate as well, just contact me using my contact page.&lt;/em>&lt;/p>
 &lt;h1 id="in-2024-we-see-the-true-face-of-the-democratic-party">In 2024, we see the true face of the democratic party&lt;/h1>
 &lt;blockquote>
-&lt;p>Scratch a liberal, and a fascist bleeds.&lt;/p></description><content>&lt;p>&lt;em>Like all articles on this site, this article is provided ad-free with no monetization model. I also do not collect personal data and have declared all original works (except images) as public domain. If you would like to support my work, please share this page. Feel free to donate as well, just contact me using my contact page.&lt;/em>&lt;/p>
-&lt;h1 id="in-2024-we-see-the-true-face-of-the-democratic-party">In 2024, we see the true face of the democratic party&lt;/h1>
-&lt;blockquote>
-&lt;p>Scratch a liberal, and a fascist bleeds.&lt;/p>
-&lt;/blockquote>
-&lt;p>A phrase echoed many times throughout the last few years in online spaces, it has certainly come true. We&amp;rsquo;ve seen posts on Reddit asking for advice on getting people&amp;rsquo;s illegal family members deported because someone voted for Trump. We see Democrats blaming any minority who speaks up. The Democratic party has failed the working class yet again, and is allowing hate to run rampant.&lt;/p>
-&lt;p>While the election isn&amp;rsquo;t 100% done being counted as of yet, current AP numbers at the time of writing show Trump won the election with 312 electoral votes. He won over 74.7 million votes and Harris got nearly 71 million votes. Both numbers are significantly lower than 2020. But how did this happen?&lt;/p>
-&lt;h1 id="the-rise-of-the-grifters">The rise of the grifters&lt;/h1>
-&lt;p>Since 2020, and alongside COVID, we saw the rise of popularity of far-right grifters online. This includes classics such as Ben Shapiro and Charlie Kirk, as well as newer faces such as Andrew Tate. With the rise of these fascist grifters, Gen Z boys and men have increasingly become further right. I believe this is much of the cause for the landslide Trump win.&lt;/p>
-&lt;p>In &lt;a href="https://www.statista.com/statistics/1417619/gb-men-opinion-andrew-tate-by-age/">a study&lt;/a>, British men were asked their opinion of Andrew Tate. The group with the most favorable view of him was 18-29 year olds. An &lt;a href="https://www.theguardian.com/news/2024/jan/06/im-andrew-tates-audience-and-i-know-why-he-appeals-to-young-men">article by The Guardian&lt;/a> also supports my view that young men find grifters such as Tate to be appealing.&lt;/p>
-&lt;p>In short, Democrats failed to reach out to these young men. This increased voter turnout for Trump this year, contributing to his landslide victory.&lt;/p>
-&lt;h1 id="voters-simply-didnt-know">Voters simply didn&amp;rsquo;t know&lt;/h1>
-&lt;p>While I don&amp;rsquo;t have specific numbers, I have seen many examples online across various platforms of people voting for Trump and not realizing what it meant. This lack of information could&amp;rsquo;ve been helped by the Democrats leaving the online echo chambers and actually talking to people. So many voters didn&amp;rsquo;t know what they voted for, that Google searches the day of the election spiked asking why Biden wasn&amp;rsquo;t on the ballot. This shows how uninformed the general population is.&lt;/p>
-&lt;p>With a voter base so uninformed, we can&amp;rsquo;t be surprised at how many people just voted for the familiar name or for &amp;ldquo;gas prices&amp;rdquo;. They remember that Trump has been president and they didn&amp;rsquo;t know who Harris was or why Biden wasn&amp;rsquo;t running, so of course they voted for him! Why is anyone shocked?&lt;/p>
-&lt;h1 id="palestine-gaza-and-israel-isntrael">Palestine, Gaza, and Israel (Isn&amp;rsquo;trael)&lt;/h1>
-&lt;p>Mockingly called Isn&amp;rsquo;trael by many leftists online, the Israel and Palestine issue has been a great center of conflict within the Democratic party. Instead of trying to court leftists by changing course on Palestine, Harris and Biden have repeatedly refused to listen to us. This has lead to many of us refusing to vote for Harris on principal. How could you vote for a genocide? While I admit the fearmongering got to me, and I ashamedly voted for Harris, I believed I was doing a good thing for myself and other queer people. Many others did not fall for this propaganda.&lt;/p>
-&lt;p>We must refuse to support a genocidal presidency, with all the blood in our bodies. I sold my soul to vote for Harris and got nothing in return. This was a mistake, and I learned my lesson.&lt;/p>
-&lt;p>A large amount of leftists refused to vote for Harris for the same reasons as why I regret doing so - she&amp;rsquo;s a genocidal freak, she has consistently moved further right, and she doesn&amp;rsquo;t give a fuck about the working class. I firmly believe the Democrats need a shift in strategy if they want to win, but that brings me to my next point:&lt;/p>
-&lt;h1 id="they-dont-want-to-win">They don&amp;rsquo;t want to win&lt;/h1>
-&lt;p>Democrats, in their infinite wisdom don&amp;rsquo;t care about winning. Them and the Republicans have the same benefactors: the bourgeoisie. False democracy does not save us from the rich. You know what does? Revolution. Go join the PSL, the SRA, the DSA, and any other organizations you can. Join any organisation movement. We must protest and fight back against the bourgeoisie state. We must go out and make our voices heard, because nobody else will make them heard for us. &lt;strong>This is what must be done to survive.&lt;/strong>&lt;/p>
-&lt;h1 id="so-what-now">So&amp;hellip; What now?&lt;/h1>
-&lt;p>Organize, organize, organize. We must stand strong together or else we will fail. We must find allies and recruit others. Join local organizations. Find a queer or anarchist bookstore. Find every leftist you can, and organize together. Alone, we are weak. Together, we are unstoppable.&lt;/p>
-&lt;h1 id="sharing-and-attribution">Sharing and Attribution&lt;/h1>
-&lt;p>If this is your first time here, you may not be familiar with my copyright model. All text is licensed under the Unlicense, meaning it is released into the public domain. Images and logos are not public domain and not licensed. If you wish to reuse any images or logos, please contact me directly.&lt;/p>
-&lt;p>If you wish to share this article on your site, you may do so free of charge. Attribution is appreciated but not required.&lt;/p></content></item><item><title>Automating Hugo deployments with GitHub and Webhooks on Ubuntu 24.04 LTS</title><link>/posts/2024/10/16/hugo-automated-deployments-webhooks-ubuntu-24.04/</link><pubDate>Wed, 16 Oct 2024 15:50:57 -0600</pubDate><guid>/posts/2024/10/16/hugo-automated-deployments-webhooks-ubuntu-24.04/</guid><description>&lt;h1 id="overview">Overview&lt;/h1>
+&lt;p>Scratch a liberal, and a fascist bleeds.&lt;/p></description></item><item><title>Automating Hugo deployments with GitHub and Webhooks on Ubuntu 24.04 LTS</title><link>/posts/2024/10/16/hugo-automated-deployments-webhooks-ubuntu-24.04/</link><pubDate>Wed, 16 Oct 2024 15:50:57 -0600</pubDate><guid>/posts/2024/10/16/hugo-automated-deployments-webhooks-ubuntu-24.04/</guid><description>&lt;h1 id="overview">Overview&lt;/h1>
 &lt;p>In this blog post, I will walk you through the process of automating Hugo deployments using a bash script and setting up a webhook to streamline updates from GitHub. The guide is designed for users on Ubuntu Server 24.04 LTS and covers three main components:&lt;/p>
 &lt;ol>
 &lt;li>Creating a Deployment Script: We will create a shell script that handles the tasks of pulling the latest code, building the Hugo site, and deploying it to the web directory. This script will ensure that your site is always up to date with the latest changes.&lt;/li>
@@ -200,95 +34,21 @@
 &lt;li>Setting Up a Systemd Service: Finally, we’ll create a systemd service to manage the webhook, ensuring that it runs reliably and automatically on server startup. This includes configuring the service for SSL if needed.&lt;/li>
 &lt;li>Enable the webhook&lt;/li>
 &lt;/ol>
-&lt;p>By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p></description><content>&lt;h1 id="overview">Overview&lt;/h1>
-&lt;p>In this blog post, I will walk you through the process of automating Hugo deployments using a bash script and setting up a webhook to streamline updates from GitHub. The guide is designed for users on Ubuntu Server 24.04 LTS and covers three main components:&lt;/p>
-&lt;ol>
-&lt;li>Creating a Deployment Script: We will create a shell script that handles the tasks of pulling the latest code, building the Hugo site, and deploying it to the web directory. This script will ensure that your site is always up to date with the latest changes.&lt;/li>
-&lt;li>Configuring a Webhook: Once the deployment script is in place, we’ll set up a webhook configuration that allows GitHub to automatically trigger the deployment process every time you push code to your repository. This automation saves time and reduces the potential for manual errors.&lt;/li>
-&lt;li>Setting Up a Systemd Service: Finally, we’ll create a systemd service to manage the webhook, ensuring that it runs reliably and automatically on server startup. This includes configuring the service for SSL if needed.&lt;/li>
-&lt;li>Enable the webhook&lt;/li>
-&lt;/ol>
-&lt;p>By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p>
-&lt;h1 id="create-hugo-deploy-script">Create Hugo deploy script&lt;/h1>
-&lt;p>I use the following script to automate Hugo deployments.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#75715e"># Change directory into build directory&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd /home/katiethedev/build/katiethe.dev
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Remove existing files in build directory&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm -rf public
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm -rf resources
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Run git pull as username &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo -u username git pull
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Run Hugo with minify option to build a minified site, to save on bandwidth and storage. For development purposes you can remove --minify.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo -u username hugo --minify
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Change directories into web directory and then remove all present files&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd /var/www/katiethe.dev
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm -rf *
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Copy all Hugo output files into web directory (switch username for your username)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cp -r /home/username/build/katiethe.dev/public/* /var/www/katiethe.dev
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Change ownership of all files in web directory to my user (change username to your username, change usergroup to your usergroup [usually the same as username])&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chown username:usergroup * -R
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Reload nginx, log nginx status to webhook log, or show if ran manually&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>service nginx reload
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>service nginx status
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This script was created on Ubuntu Server 24.04 LTS.&lt;/p>
-&lt;h1 id="create-a-webhook">Create a webhook&lt;/h1>
-&lt;h2 id="create-webhookconf">Create webhook.conf&lt;/h2>
-&lt;p>With that script created (I named it &lt;code>hugo-deploy.sh&lt;/code>) and placed into a directory of your choice, we can now create a webhook. GitHub will call this webhook every time code is pushed to GitHub. This will automatically deploy the website.&lt;/p>
-&lt;p>I placed the following into &lt;code>/etc/webhook.conf&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>[
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;deploy&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;execute-command&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;/home/username/hugo-deploy.sh&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;command-working-directory&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;/home/username/&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;trigger-rule&amp;#34;&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;match&amp;#34;&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;payload-hash-sha1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;secret&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;your-secret&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;parameter&amp;#34;&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;source&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;header&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;X-Hub-Signature&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>]
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you placed your script into a file other than your home directory, the specific locations may differ.&lt;/p>
-&lt;h2 id="add-systemd-service">Add systemd service&lt;/h2>
-&lt;p>Lastly, I created a systemd service called &lt;code>webhook&lt;/code> located at &lt;code>/usr/lib/systemd/system/webhook.service&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>[Unit]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Description=Small server for creating HTTP endpoints (hooks)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Documentation=https://github.com/adnanh/webhook/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ConditionPathExists=/etc/webhook.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[Service]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ExecStart=/usr/bin/webhook -nopanic -hooks /etc/webhook.conf -secure -cert /etc/letsencrypt/live/katiethe.dev/fullchain.pem -key /etc/letsencrypt/live/katiethe.dev/privkey.pem -verbose
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[Install]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>WantedBy=multi-user.target
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you need SSL, replace the paths with the correct paths for your keys. Otherwise, feel free to remove them. My webhook is hosted behind NGINX, so I don&amp;rsquo;t use keys for my webhook. Instead, NGINX terminates SSL for me and then passes the request to the webhook.&lt;/p>
-&lt;h2 id="enable-the-webhook">Enable the webhook&lt;/h2>
-&lt;p>After creating all of those files, simply run &lt;code>sudo systemctl daemon-reload&lt;/code>, then enable and run the webhook:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo systemctl enable webhook
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo systemctl start webhook
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can now test your webhook with either curl or by adding it in GitHub. If you set a secret, make sure to add that to GitHub as well.&lt;/p>
-&lt;h2 id="view-webhook-logs">View Webhook Logs&lt;/h2>
-&lt;p>Webhooks can be viewed by running the following:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>journalctl -u webhook.service
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></content></item><item><title>Robots.txt</title><link>/posts/2024/10/16/robots-txt/</link><pubDate>Wed, 16 Oct 2024 12:40:57 -0600</pubDate><guid>/posts/2024/10/16/robots-txt/</guid><description>&lt;p>An updated copy of my robots.txt can be found below:
+&lt;p>By the end of this post, you’ll have a fully automated Hugo deployment system that responds instantly to your code updates, enhancing your development workflow and improving site management.&lt;/p></description></item><item><title>Robots.txt</title><link>/posts/2024/10/16/robots-txt/</link><pubDate>Wed, 16 Oct 2024 12:40:57 -0600</pubDate><guid>/posts/2024/10/16/robots-txt/</guid><description>&lt;p>An updated copy of my robots.txt can be found below:
 &lt;pre>&lt;code>User-agent: GPTBot
 Disallow: /
 User-agent: ChatGPT-User
 Disallow: /
+
 User-agent: Google-Extended
 Disallow: /
+
 User-agent: CCBot
 Disallow: /
+
 User-agent: PerplexityBot
 Disallow: /
+
 User-agent: anthropic-ai
 Disallow: /
 ‍User-agent: Claude-Web
@@ -296,76 +56,11 @@ Disallow: /
 User-agent: ClaudeBot
 Disallow: /
 &lt;/code>&lt;/pre>&lt;/p>
-&lt;p>While all of my content (except for logos and images) is licensed under the Unlicense, I prefer that generative AI does not train on my website. Therefore, I have attempted to block such crawlers from my website.&lt;/p></description><content>&lt;p>An updated copy of my robots.txt can be found below:
-&lt;pre>&lt;code>User-agent: GPTBot
-Disallow: /
-User-agent: ChatGPT-User
-Disallow: /
-User-agent: Google-Extended
-Disallow: /
-User-agent: CCBot
-Disallow: /
-User-agent: PerplexityBot
-Disallow: /
-User-agent: anthropic-ai
-Disallow: /
-‍User-agent: Claude-Web
-Disallow: /
-User-agent: ClaudeBot
-Disallow: /
-&lt;/code>&lt;/pre>&lt;/p>
-&lt;p>While all of my content (except for logos and images) is licensed under the Unlicense, I prefer that generative AI does not train on my website. Therefore, I have attempted to block such crawlers from my website.&lt;/p>
-&lt;p>This can be accomplished with:&lt;/p>
-&lt;pre tabindex="0">&lt;code>User-agent: GPTBot
-Disallow: /
-User-agent: ChatGPT-User
-Disallow: /
-&lt;/code>&lt;/pre>&lt;p>The following section can be used to block Google&amp;rsquo;s generative AI:&lt;/p>
-&lt;pre tabindex="0">&lt;code>User-agent: Google-Extended
-Disallow: /
-&lt;/code>&lt;/pre>&lt;p>Commoncrawl (CCBot) is a non-profit crawler, but their data is commonly used for AI training:&lt;/p>
-&lt;pre tabindex="0">&lt;code>User-agent: CCBot
-Disallow: /
-&lt;/code>&lt;/pre>&lt;p>Perplexity AI can be blocked:&lt;/p>
-&lt;pre tabindex="0">&lt;code>User-agent: PerplexityBot
-Disallow: /
-&lt;/code>&lt;/pre>&lt;p>Claude is blocked with:&lt;/p>
-&lt;pre tabindex="0">&lt;code>User-agent: anthropic-ai
-Disallow: /
-‍User-agent: Claude-Web
-Disallow: /
-User-agent: ClaudeBot
-Disallow: /
-&lt;/code>&lt;/pre></content></item><item><title>About</title><link>/about/</link><pubDate>Mon, 14 Oct 2024 20:22:20 -0600</pubDate><guid>/about/</guid><description>&lt;h1 id="about-me">About me&lt;/h1>
+&lt;p>While all of my content (except for logos and images) is licensed under the Unlicense, I prefer that generative AI does not train on my website. Therefore, I have attempted to block such crawlers from my website.&lt;/p></description></item><item><title>About</title><link>/about/</link><pubDate>Mon, 14 Oct 2024 20:22:20 -0600</pubDate><guid>/about/</guid><description>&lt;h1 id="about-me">About me&lt;/h1>
 &lt;p>Welcome to my website, &lt;a href="/">KatieThe.Dev&lt;/a>! Here you will find information about my homelab, some of my projects, and anything else I feel like posting on my &lt;a href="/posts/">blog section&lt;/a>.&lt;/p>
 &lt;p>If you have any ideas for any of my projects, something you would like me to cover, or anything else you would like to contact me about, please feel free to email me at &lt;span
-class="text-accent-color"
->contact [@] katiethe.dev&lt;/span>! I use ProtonMail, so if you use it your messages are encrypted by default. Otherwise, you can choose to use PGP using the key posted on my About page!&lt;/p></description><content>&lt;h1 id="about-me">About me&lt;/h1>
-&lt;p>Welcome to my website, &lt;a href="/">KatieThe.Dev&lt;/a>! Here you will find information about my homelab, some of my projects, and anything else I feel like posting on my &lt;a href="/posts/">blog section&lt;/a>.&lt;/p>
-&lt;p>If you have any ideas for any of my projects, something you would like me to cover, or anything else you would like to contact me about, please feel free to email me at &lt;span
-class="text-accent-color"
->contact [@] katiethe.dev&lt;/span>! I use ProtonMail, so if you use it your messages are encrypted by default. Otherwise, you can choose to use PGP using the key posted on my About page!&lt;/p>
-&lt;h1 id="robotstxt">Robots.txt&lt;/h1>
-&lt;p>An up-to-date copy of my robots.txt can be found &lt;a href="/robots.txt">here&lt;/a>. An explaination of my robots policy can be found at&lt;/p>
-&lt;h1 id="pgp">PGP&lt;/h1>
-&lt;p>Any new PGP keys will be posted as signed by my previous key. If new keys are posted without a signature, it may indicate I was compromised in some way.&lt;/p>
-&lt;p>A revocation message and certificate can be found for a previous key can be found &lt;a href="/oldkey.txt">here&lt;/a>.&lt;/p>
-&lt;p>My PGP public key is (&lt;a href="/KatieTheDev_0x6D281D03_public.asc">raw&lt;/a>):
-&lt;pre>&lt;code>-----BEGIN PGP PUBLIC KEY BLOCK-----
-Comment: User-ID: KatieTheDev &amp;lt;contact@katiethe.dev&amp;gt;
-Comment: Valid from: 10/16/2024 11:59 AM
-Comment: Valid until: 10/16/2026 12:00 PM
-Comment: Type: 255-bit EdDSA (secret key available)
-Comment: Usage: Signing, Encryption, Certifying User-IDs
-Comment: Fingerprint: BFECFEACB1616BE1D8FE6FC395295AE86D281D03
-mDMEZw/&amp;#43;&amp;#43;BYJKwYBBAHaRw8BAQdA0mnNsf9zMCHFltUMFzsVr&amp;#43;dW2Ht1TtD8X5p8
-wieHIcq0IkthdGllVGhlRGV2IDxjb250YWN0QGthdGlldGhlLmRldj6ImQQTFgoA
-QRYhBL/s/qyxYWvh2P5vw5UpWuhtKB0DBQJnD/74AhsDBQkDwmcoBQsJCAcCAiIC
-BhUKCQgLAgQWAgMBAh4HAheAAAoJEJUpWuhtKB0Dr48A/17FIxtwIYxfMh2f7XwV
-1shWRA9v/5UdsDwOJQuzI8HqAQC9h1g/l0tDAr2XbXzzvgU1RgfrB6mf0JF9mByb
-GdcqDrg4BGcP/vgSCisGAQQBl1UBBQEBB0Bsey4WGFbTE6SFyOtyefWIiN53dnJu
-2swrY8xW8JTrMAMBCAeIfgQYFgoAJhYhBL/s/qyxYWvh2P5vw5UpWuhtKB0DBQJn
-D/74AhsMBQkDwmcoAAoJEJUpWuhtKB0D2AMBAPNMIMPMO5P4InPMPAaErKIvKQl1
-GSYneac1cnoh&amp;#43;avVAP0RaHmkw&amp;#43;rStBroUj3uUzZCqC&amp;#43;OIhNZzepIM06NTYGMBA==
-=hYbD
------END PGP PUBLIC KEY BLOCK-----&lt;/code>&lt;/pre>&lt;/p></content></item></channel></rss>
+ class="text-accent-color"
+ 
+ 
+ 
+>contact [@] katiethe.dev&lt;/span>! I use ProtonMail, so if you use it your messages are encrypted by default. Otherwise, you can choose to use PGP using the key posted on my About page!&lt;/p></description></item></channel></rss>
