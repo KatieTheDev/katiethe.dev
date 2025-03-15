@@ -29,6 +29,3 @@ Please see LICENSE in the project root for more information.
 {{ $bundle := slice $menu $prism | resources.Concat "bundle.js" | resources.Minify }}
 
 <script type="text/javascript" src="{{ $bundle.RelPermalink }}"></script>
-
-<!-- Extended footer section-->
-{{ partial "extended_footer.html" . }}
