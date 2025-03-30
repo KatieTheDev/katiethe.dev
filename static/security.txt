@@ -1,6 +1,0 @@
-Contact: mailto:contact@katiethe.dev
-Expires: 2026-03-30T03:35:00.000Z
-Encryption: https://katiethe.dev/KatieTheDev_0x6D281D03_public.asc
-Preferred-Languages: en
-Canonical: https://katiethe.dev/.well_known/security.txt
-Canonical: https://katiethe.dev/security.txt
