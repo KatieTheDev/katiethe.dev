@@ -1,7 +1,7 @@
 +++
 title = "Why I am a Socialist"
 slug = "why-i-am-a-socialist" # Set manually if title is not usable as slug
-date = "2025-06-18 04:14:00 PM MST"
+date = "2025-06-18T16:14:00-0600"
 dateFormat = "2006-01-02 3:04:06 PM MST"
 author = "KatieTheDev" # Set author name here!
 #tags = ["", ""]
