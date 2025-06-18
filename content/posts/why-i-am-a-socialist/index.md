@@ -1,3 +1,17 @@
++++
+title = "Why I am a Socialist"
+slug = "why-i-am-a-socialist" # Set manually if title is not usable as slug
+date = "2025-06-18 04:14:00 PM MST"
+dateFormat = "2006-01-02 3:04:06 PM MST"
+author = "KatieTheDev" # Set author name here!
+#tags = ["", ""]
+#keywords = ["", ""]
+#description = ""
+showFullContent = false
+readingTime = true
+hideComments = false
+draft = false
++++
 We must stand in solidarity together in order to create a cohesive plan for change. The billionaire class must no longer trample on the worker.
 
 One thing that lead me to leftism, ironically, is libertarianism. I was briefly a libertarian as an edgy teenager. As we should all know, the Gadsen flag{{< super "[Fig. 1]" >}} has the text "Don't tread on me". This idea of being independent from all masters perseveres into the ideas of communism. As a communist, I believe that the only way we as workers can be free of the capitalists' boots is to rid ourselves of capitalism. 
