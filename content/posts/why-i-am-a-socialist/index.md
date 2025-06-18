@@ -2,7 +2,7 @@ We must stand in solidarity together in order to create a cohesive plan for chan
 
 One thing that lead me to leftism, ironically, is libertarianism. I was briefly a libertarian as an edgy teenager. As we should all know, the Gadsen flag<sup>[Fig. 1]</sup> has the text "Don't tread on me". This idea of being independent from all masters perseveres into the ideas of communism. As a communist, I believe that the only way we as workers can be free of the capitalists' boots is to rid ourselves of capitalism. 
 
-{{ $image := .Resources.Get "gadsen-flag.png" }}
+{{ $image := .Resources.Get "Gadsen-Flag.png" }}
 <sup>[Figure 1]</sup>
 Capitalism is a system that is *designed* to give excess wealth and power to those who already have it, while draining it from those who do not. As we've seen in the great wealth transfers that have occurred in the age of Neoliberalism, kickstarted by Reagan and Thatcher, the wealthy will exploit any ounce of power they're given in order to get more. Silicon valley is a prime example: various tech CEOs such as Zuckerberg, Tim Cook, Steve Jobs, Bill Gates, Jeff Bezos, and more, their money was not born of their own work. Bezos was given money from his wealthy parents to start Amazon. Jobs was too, for Apple. Zuckerberg was also from a wealthy background, and Facebook originally existed as a site to rate how "hot" his classmates were.
 
