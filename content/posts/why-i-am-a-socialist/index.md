@@ -14,7 +14,7 @@ draft = false
 +++
 We must stand in solidarity together in order to create a cohesive plan for change. The billionaire class must no longer trample on the worker.
 
-One thing that lead me to leftism, ironically, is libertarianism. I was briefly a libertarian as an edgy teenager. As we should all know, the Gadsen flag{{< super "[Fig. 1]" >}} has the text "Don't tread on me". This idea of being independent from all masters perseveres into the ideas of communism. As a communist, I believe that the only way we as workers can be free of the capitalists' boots is to rid ourselves of capitalism. 
+One thing that lead me to leftism, ironically, is libertarianism. I was briefly a libertarian as an edgy teenager. As we should all know, the Gadsden flag{{< super "[Fig. 1]" >}} has the text "Don't tread on me". This idea of being independent from all masters perseveres into the ideas of communism. As a communist, I believe that the only way we as workers can be free of the capitalists' boots is to rid ourselves of capitalism. 
 
 ![Gadsen Flag](Gadsden-Flag.png) 
 {{< super "[Figure 1]" >}} 
