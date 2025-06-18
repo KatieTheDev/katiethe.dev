@@ -11,6 +11,7 @@ showFullContent = false
 readingTime = true
 hideComments = false
 draft = false
+toc = false
 +++
 We must stand in solidarity together in order to create a cohesive plan for change. The billionaire class must no longer trample on the worker.
 
