@@ -9,6 +9,8 @@ Welcome to my website, [KatieThe.Dev](/)! Here you will find information about m
 
 If you have any ideas for any of my projects, something you would like me to cover, or anything else you would like to contact me about, please feel free to email me at {{< attr class="text-accent-color" >}}contact [@] katiethe.dev{{< /attr >}}! I use ProtonMail, so if you use it your messages are encrypted by default. Otherwise, you can choose to use PGP using the key posted on my About page!
 
+# Donations
+I accept Monero (XMR) donations at `88irKsz6PaYgJj2Ni48fs8imvEreGUyj9YDW42sFzcBk63kJPE7y5hcU1ioaiuo8axQaY3iL9bbY2MSgYPYzQGf989b5TmN`
 # Robots.txt
 An up-to-date copy of my robots.txt can be found [here](/robots.txt). An explaination of my robots policy can be found at 
 
