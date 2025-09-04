@@ -13,7 +13,7 @@ hideComments = false
 draft = false
 toc = true
 +++
-Cryptocurrency. Leftist politics. Two things that don't often intermingle. But should they 
+Cryptocurrency. Leftist politics. Two things that don't often intermingle. But should they? 
 
 # The start of cryptocurrency
 Bitcoin started on 3 January 2009 and was created by someone who used the pseudonym of Satoshi Nakamoto. We still don't know who he was, but we can't deny his lasting impact. While Bitcoin certainly has it's flaws, it has lead to the creation of many other cryptocurrencies. It has utility in being the first decentralized way to send and receive money. It is no longer useful to us, since it can be very easily traced by governments and has no other use cases besides investment and transactions that can be public. There are some technologies layered on top, such as Lightning, and some cryptocurrencies based on or such as Bitcoin Cash, Litecoin, Dogecoin, and a plethora of shitcoins (a word used to describe 'assets' that only exist for speculation), but aside from that, Bitcoin is largely concrete. 
