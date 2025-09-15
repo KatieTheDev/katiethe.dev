@@ -10,7 +10,7 @@ description = "Cryptocurrency. Leftist politics. Two things that don't often int
 showFullContent = false
 readingTime = true
 hideComments = false
-draft = false
+draft = true
 toc = true
 +++
 Cryptocurrency. Leftist politics. Two things that don't often intermingle. But should they? 
